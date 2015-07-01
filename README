@@ -1,0 +1,41 @@
+patts-qt
+========
+
+A simple graphical frontend to Delwink's [PATTS][1] using the PyQt module for
+Python 3.
+
+Required Modules
+----------------
+
+The following modules must be installed for Python 3 for this application to
+run.
+
+| Module | Purpose                                |
+|--------|----------------------------------------|
+| PyQt4  | GUI Toolkit                            |
+| patts  | PATTS-specific features and operations |
+| sqon   | Database connectivity                  |
+
+On Debian, PyQt4 can be installed with
+
+    # apt-get install python3-pyqt4
+
+The `patts` and `sqon` modules can be downloaded from
+[Delwink's website][2]. The instructions and dependencies of those modules are
+described in their documentation.
+
+Hacking
+-------
+
+We strive to keep the code compliant with PEP 8, but there are exceptions to
+every rule. Pull requests can be submitted via GitHub or [e-mail][3].
+
+License
+-------
+
+patts-qt is libre software: you are free to use, modify, and redistribute it
+under the terms of version 3 of the GNU Affero General public license.
+
+[1]: http://delwink.com/software/patts.html
+[2]: http://delwink.com/
+[3]: mailto:contribute@delwink.com
