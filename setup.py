@@ -16,10 +16,10 @@ setup(
     author='David McMackins II',
     author_email='david@delwink.com',
     url='http://delwink.com/software/patts.html',
-    install_requires=['patts', 'sqon', 'PyQt4'],
+    install_requires=['patts', 'sqon', 'python-qt'],
     packages=['patts_gui'],
     package_data={'': ['COPYING']},
-    package_dir={'patts_gui': 'gui'},
+    package_dir={'patts_gui': 'patts_gui'},
     scripts=['patts-qt'],
     include_package_data=True,
     license='AGPLv3'
