@@ -1,4 +1,3 @@
-#! /usr/bin/env python3
 ##
 ##  patts-qt - Qt GUI client for PATTS
 ##  Copyright (C) 2015 Delwink, LLC
@@ -16,8 +15,10 @@
 ##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
 
-__title__ = 'patts-qt'
-__version__ = '0.0.0'
-__author__ = 'David McMackins II'
-__license__ = 'AGPLv3'
-__copyright__ = 'Copyright 2015 Delwink, LLC'
+from PyQt4.QtGui import QWidget
+from .config import get
+
+class MainWindow(QWidget):
+    def __init__(self):
+        self.resize(get('MainWindow', 'width'), get('MainWindow', 'height'))
+        self.setWindowTitle('PATTS')
