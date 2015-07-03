@@ -16,22 +16,13 @@
 ##
 
 from PyQt4.QtGui import QWidget
-from .config import get
 
-class MainWindow(QWidget):
-    _user = ''
-    _passwd = ''
-    _host = ''
-    _db = ''
-
-    def __init__(self, user, passwd, host, database):
+class LoginWindow(QWidget):
+    def __init__(self):
         super()
 
-        self.resize(int(get('MainWindow', 'width')),
-                    int(get('MainWindow', 'height')))
-        self.setWindowTitle('PATTS')
+        # TODO: create small window which stores login credentials
 
-        self._user = user
-        self._passwd = passwd
-        self._host = host
-        self._db = database
+def get_login():
+    l = LoginWindow()
+    return l.get_info()
