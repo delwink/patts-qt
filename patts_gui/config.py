@@ -15,8 +15,18 @@
 ##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
 
-def get(section, key):
-    pass
+from os.path import expanduser, join
+from configparser import ConfigParser
 
-def put(section, key):
-    pass
+CONFIG_PATH = join(expanduser('~'), '.patts', 'config.ini')
+config = ConfigParser()
+
+config.read(CONFIG_PATH)
+
+def get(section, key):
+    return config[section][key]
+
+def put(section, key, value):
+    config[section][key] = value
+    with open(CONFIG_PATH, 'w') as f:
+        config.write(f)
