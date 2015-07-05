@@ -30,7 +30,7 @@ class PattsApp(QApplication):
 
     def __init__(self, argv):
         self._argv = argv
-        super(argv)
+        super(PattsApp, self).__init__(argv)
 
         try:
             if get('Login', 'autologin').lower() == 'true':
@@ -48,7 +48,7 @@ class PattsApp(QApplication):
     def exec_(self):
         if self._user and self._passwd and self._host and self._db:
             _mwin.show()
-            return super(self._argv)
+            return super(PattsApp, self).exec_(self._argv)
         else:
             raise LookupError('Application initialization did not get '
                               'credentials!')

@@ -16,8 +16,14 @@
 ##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
 
+from sys import argv
+from patts_gui import PattsApp
+
 __title__ = 'patts-qt'
 __version__ = '0.0.0'
 __author__ = 'David McMackins II'
 __license__ = 'AGPLv3'
 __copyright__ = 'Copyright 2015 Delwink, LLC'
+
+app = PattsApp(argv)
+exit(app.exec_())

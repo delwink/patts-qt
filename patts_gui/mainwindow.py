@@ -25,7 +25,7 @@ class MainWindow(QWidget):
     _db = ''
 
     def __init__(self, user, passwd, host, database):
-        super()
+        super(MainWindow, self).__init__()
 
         self.resize(int(get('MainWindow', 'width')),
                     int(get('MainWindow', 'height')))

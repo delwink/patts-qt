@@ -19,7 +19,7 @@ from PyQt4.QtGui import QWidget
 
 class LoginWindow(QWidget):
     def __init__(self):
-        super()
+        super(LoginWindow, self).__init__()
 
         # TODO: create small window which stores login credentials
 
