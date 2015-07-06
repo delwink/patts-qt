@@ -17,7 +17,7 @@
 ##
 
 from sys import argv
-from patts_gui import PattsApp
+from pattsgui import PattsApp
 
 __title__ = 'patts-qt'
 __version__ = '0.0.0'

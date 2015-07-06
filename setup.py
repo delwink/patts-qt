@@ -17,9 +17,9 @@ setup(
     author_email='david@delwink.com',
     url='http://delwink.com/software/patts.html',
     install_requires=['patts', 'sqon'],
-    packages=['patts_gui'],
+    packages=['pattsgui'],
     package_data={'': ['COPYING']},
-    package_dir={'patts_gui': 'patts_gui'},
+    package_dir={'pattsgui': 'pattsgui'},
     scripts=['patts-qt'],
     include_package_data=True,
     license='AGPLv3'
