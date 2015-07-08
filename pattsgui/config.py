@@ -26,8 +26,8 @@ if not exists(CONFIG_PATH): # need to write default settings
 
     with open(CONFIG_PATH, 'w') as f:
         config.write(f)
-
-config.read(CONFIG_PATH)
+else:
+    config.read(CONFIG_PATH)
 
 def get(section, key):
     return config[section][key]
