@@ -16,18 +16,11 @@
 ##
 
 from PyQt4.QtGui import QApplication
-from .config import get
+from .config import get, put
 from .login import get_login
 from .mainwindow import MainWindow
 
 class PattsApp(QApplication):
-    _user = ''
-    _passwd = ''
-    _host = ''
-    _db = ''
-    _mwin = None
-    _argv = []
-
     def __init__(self, argv):
         self._argv = argv
         super(PattsApp, self).__init__(argv)
@@ -39,16 +32,36 @@ class PattsApp(QApplication):
                 self._host = get('Login', 'host')
                 self._db = get('Login', 'database')
             else:
-                self._user, self._passwd, self._host, self._db = get_login()
+                self._login()
         except KeyError:
-            self._user, self._passwd, self._host, self._db = get_login()
+            self._login()
 
-        _mwin = MainWindow(self._user, self._passwd, self._host, self._db)
+        self._mwin = MainWindow(self._user, self._passwd, self._host, self._db)
+
+    def _login(self, message=''):
+        self._user, self._passwd, self._host, self._db = get_login(message)
+        put('Login', 'user', self._user)
+        put('Login', 'host', self._host)
+        put('Login', 'database', self._db)
+
+        if get('Login', 'autologin').lower() == 'true':
+            put('Login', 'passwd', self._passwd)
 
     def exec_(self):
         if self._user and self._passwd and self._host and self._db:
-            _mwin.show()
-            return super(PattsApp, self).exec_(self._argv)
+            self._mwin.show()
+            return super(PattsApp, self).exec_()
         else:
-            raise LookupError('Application initialization did not get '
-                              'credentials!')
+            if not self._user:
+                self._login('Login.badUser')
+            elif not self._passwd:
+                self._login('Login.badPass')
+            elif not self._host:
+                self._login('Login.badHost')
+            elif not self._db:
+                self._login('Login.badDatabase')
+            else:
+                raise LookupError('Application initialization did not get '
+                                  'credentials!')
+
+            return self.exec_()

@@ -1,0 +1,11 @@
+[en_US]
+LoginWindow.title = PATTS Database Login
+LoginWindow.server = Server
+LoginWindow.database = Database Name
+LoginWindow.user = Username
+LoginWindow.password = Password
+
+Login.badUser = Invalid username
+Login.badPass = Invalid password
+Login.badHost = Invalid server address
+Login.badDatabase = Invalid database name
