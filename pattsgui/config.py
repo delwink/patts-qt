@@ -15,11 +15,17 @@
 ##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
 
-from os.path import expanduser, join
+from os.path import expanduser, join, exists
 from configparser import ConfigParser
 
 CONFIG_PATH = join(expanduser('~'), '.patts', 'config.ini')
 config = ConfigParser()
+
+if not exists(CONFIG_PATH): # need to write default settings
+    config['Global']['lang'] = 'en_US'
+
+    with open(CONFIG_PATH, 'w') as f:
+        config.write(f)
 
 config.read(CONFIG_PATH)
 
