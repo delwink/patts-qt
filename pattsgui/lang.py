@@ -25,5 +25,8 @@ _lfile = ConfigParser()
 
 def _(s):
     _lfile.read(join(_LDIR, _LANG + '.lang'))
-    return _lfile[_LANG][s]
+    try:
+        return _lfile[_LANG][s]
+    except KeyError:
+        return s
         
