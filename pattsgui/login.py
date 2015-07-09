@@ -89,8 +89,6 @@ class LoginWindow(QDialog):
         winLayout.addLayout(inputBox)
         winLayout.addLayout(buttonBox)
 
-        QObject.connect(self, SIGNAL('triggered()'), self._cancel)
-
         self.setLayout(winLayout)
         self.setWindowTitle(_('LoginWindow.title'))
         self.resize(250, 200)
