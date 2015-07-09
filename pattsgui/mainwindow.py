@@ -17,6 +17,7 @@
 
 from PyQt4.QtGui import QWidget
 from .config import get
+from .lang import _
 
 class MainWindow(QWidget):
     _user = ''
@@ -27,11 +28,11 @@ class MainWindow(QWidget):
     def __init__(self, user, passwd, host, database):
         super(MainWindow, self).__init__()
 
-        self.resize(int(get('MainWindow', 'width')),
-                    int(get('MainWindow', 'height')))
-        self.setWindowTitle('PATTS')
-
         self._user = user
         self._passwd = passwd
         self._host = host
         self._db = database
+
+        self.resize(int(get('MainWindow', 'width')),
+                    int(get('MainWindow', 'height')))
+        self.setWindowTitle(_('MainWindow.title').format(host, database, user))

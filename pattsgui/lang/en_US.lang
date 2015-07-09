@@ -12,3 +12,5 @@ Login.badUser = Invalid username
 Login.badPass = Invalid password
 Login.badHost = Invalid server address
 Login.badDatabase = Invalid database name
+
+MainWindow.title = PATTS - Server: {}, DB: {}, User: {}
