@@ -5,6 +5,8 @@ LoginWindow.database = Database Name
 LoginWindow.user = Username
 LoginWindow.password = Password
 LoginWindow.autoLogin = Remember Me
+LoginWindow.logIn = Log in
+LoginWindow.cancel = Cancel
 
 Login.badUser = Invalid username
 Login.badPass = Invalid password

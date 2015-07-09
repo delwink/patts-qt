@@ -23,17 +23,18 @@ from .lang import _
 from .config import get, put
 
 class LoginWindow(QDialog):
-    def __init__(self, message=''):
+    def __init__(self, message='', logInText='LoginWindow.logIn',
+                 cancelText='LoginWindow.cancel'):
         super(LoginWindow, self).__init__()
 
         self._cancelled = False
         self._ready = False
 
-        logInButton = QPushButton('Log in')
+        logInButton = QPushButton(_(logInText))
         logInButton.clicked.connect(self._store_results)
         logInButton.setDefault(True)
 
-        cancelButton = QPushButton('Cancel')
+        cancelButton = QPushButton(_(cancelText))
         cancelButton.clicked.connect(self._cancel)
 
         buttonBox = QHBoxLayout()
