@@ -22,7 +22,6 @@ from .mainwindow import MainWindow
 
 class PattsApp(QApplication):
     def __init__(self, argv):
-        self._argv = argv
         super(PattsApp, self).__init__(argv)
 
         try:
