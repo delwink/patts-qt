@@ -1,4 +1,8 @@
 [en_US]
+OK = OK
+
+Exception.label = An error occurred:
+
 LoginWindow.title = PATTS Database Login
 LoginWindow.server = Server
 LoginWindow.database = Database Name

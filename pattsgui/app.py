@@ -15,10 +15,13 @@
 ##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
 
+import patts
+
 from PyQt4.QtGui import QApplication
 from .config import get, put
 from .login import get_login
 from .mainwindow import MainWindow
+from .exception import ExceptionDialog, format_exc
 
 class PattsApp(QApplication):
     def __init__(self, argv):
@@ -54,8 +57,23 @@ class PattsApp(QApplication):
 
     def exec_(self):
         if self._user and self._passwd and self._host and self._db:
-            self._mwin.show()
-            return super(PattsApp, self).exec_()
+            try:
+                srv = self._host
+                port = '0'
+
+                if ':' in srv:
+                    split = srv.split(':')
+                    srv = split[0]
+                    port = split[1]
+
+                patts.init(host=srv, user=self._user, passwd=self._passwd,
+                           database=self._db, port=port)
+
+                self._mwin.show()
+                return super(PattsApp, self).exec_()
+            except Exception:
+                ExceptionDialog(format_exc()).exec_()
+                raise
         else:
             if self._cancelled:
                 exit(0)
@@ -68,7 +86,11 @@ class PattsApp(QApplication):
             elif not self._db:
                 self._login('Login.badDatabase')
             else:
-                raise LookupError('Application initialization did not get '
-                                  'credentials!')
+                try:
+                    raise LookupError('Application initialization did not get '
+                                      'credentials!')
+                except:
+                    ExceptionDialog(format_exc()).exec_()
+                    raise
 
             return self.exec_()
