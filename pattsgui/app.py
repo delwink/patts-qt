@@ -24,6 +24,8 @@ class PattsApp(QApplication):
     def __init__(self, argv):
         super(PattsApp, self).__init__(argv)
 
+        self._cancelled = False
+
         try:
             if get('Login', 'autologin').lower() == 'true':
                 self._user = get('Login', 'user')
@@ -39,19 +41,25 @@ class PattsApp(QApplication):
 
     def _login(self, message=''):
         self._user, self._passwd, self._host, self._db = get_login(message)
-        put('Login', 'user', self._user)
-        put('Login', 'host', self._host)
-        put('Login', 'database', self._db)
 
-        if get('Login', 'autologin').lower() == 'true':
-            put('Login', 'passwd', self._passwd)
+        try:
+            put('Login', 'user', self._user)
+            put('Login', 'host', self._host)
+            put('Login', 'database', self._db)
+
+            if get('Login', 'autologin').lower() == 'true':
+                put('Login', 'passwd', self._passwd)
+        except TypeError:
+            self._cancelled = True
 
     def exec_(self):
         if self._user and self._passwd and self._host and self._db:
             self._mwin.show()
             return super(PattsApp, self).exec_()
         else:
-            if not self._user:
+            if self._cancelled:
+                exit(0)
+            elif not self._user:
                 self._login('Login.badUser')
             elif not self._passwd:
                 self._login('Login.badPass')
