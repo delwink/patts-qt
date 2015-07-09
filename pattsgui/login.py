@@ -16,11 +16,11 @@
 ##
 
 from PyQt4.QtGui import QDialog, QPushButton, QHBoxLayout, QVBoxLayout
-from PyQt4.QtGui import QLineEdit, QDesktopWidget, QLabel, QPalette
+from PyQt4.QtGui import QLineEdit, QDesktopWidget, QLabel, QPalette, QCheckBox
 from PyQt4.QtCore import SIGNAL, QObject, Qt
 
 from .lang import _
-from .config import get
+from .config import get, put
 
 class LoginWindow(QDialog):
     def __init__(self, message=''):
@@ -66,6 +66,10 @@ class LoginWindow(QDialog):
         self.passInput.setPlaceholderText(_('LoginWindow.password'))
         self.passInput.setEchoMode(QLineEdit.Password)
 
+        self.autoLogin = QCheckBox()
+        self.autoLogin.setText(_('LoginWindow.autoLogin'))
+        self.autoLogin.toggled.connect(self._set_auto)
+
         if message:
             self.errorLabel = QLabel(_(message))
             palette = QPalette()
@@ -79,6 +83,7 @@ class LoginWindow(QDialog):
         inputBox.addWidget(self.dbInput)
         inputBox.addWidget(self.userInput)
         inputBox.addWidget(self.passInput)
+        inputBox.addWidget(self.autoLogin)
 
         winLayout = QVBoxLayout()
         winLayout.addLayout(inputBox)
@@ -105,6 +110,12 @@ class LoginWindow(QDialog):
         self.deleteLater()
         self._cancelled = True
         self._ready = True
+
+    def _set_auto(self):
+        if self.autoLogin.isChecked():
+            put('Login', 'autologin', 'true')
+        else:
+            put('Login', 'autologin', 'false')
 
     def _center(self):
         geom = self.frameGeometry()

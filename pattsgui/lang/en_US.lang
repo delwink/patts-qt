@@ -4,6 +4,7 @@ LoginWindow.server = Server
 LoginWindow.database = Database Name
 LoginWindow.user = Username
 LoginWindow.password = Password
+LoginWindow.autoLogin = Remember Me
 
 Login.badUser = Invalid username
 Login.badPass = Invalid password
