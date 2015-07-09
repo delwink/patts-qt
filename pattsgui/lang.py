@@ -23,8 +23,9 @@ _LANG = get('Global', 'lang')
 _LDIR = join(dirname(realpath(__file__)), 'lang/')
 _lfile = ConfigParser()
 
+_lfile.read(join(_LDIR, _LANG + '.lang'))
+
 def _(s):
-    _lfile.read(join(_LDIR, _LANG + '.lang'))
     try:
         return _lfile[_LANG][s]
     except KeyError:
