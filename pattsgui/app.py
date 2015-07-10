@@ -28,6 +28,7 @@ class PattsApp(QApplication):
         super(PattsApp, self).__init__(argv)
 
         self._cancelled = False
+        self._mwin = None
 
         try:
             if get('Login', 'autologin').lower() == 'true':
@@ -40,7 +41,28 @@ class PattsApp(QApplication):
         except KeyError:
             self._login()
 
-        self._mwin = MainWindow(self._user, self._passwd, self._host, self._db)
+        while self._mwin is None:
+            try:
+                self._mwin = MainWindow(self._user, self._passwd, self._host,
+                                        self._db)
+            except Exception as e:
+                if type(e) is Exception:
+                    errno = int(str(e))
+
+                    if errno == 1044:
+                        self._login('Login.badDatabase')
+                    elif errno == 1045:
+                        self._login('Login.accessDenied')
+                    elif errno == 2005:
+                        self._login('Login.badHost')
+                    else:
+                        self._login('Error {}'.format(errno))
+
+                    if self._cancelled:
+                        exit(0)
+                else:
+                    ExceptionDialog(format_exc()).exec_()
+                    raise
 
     def _login(self, message=''):
         self._user, self._passwd, self._host, self._db = get_login(message)

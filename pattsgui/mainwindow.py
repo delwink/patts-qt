@@ -24,26 +24,17 @@ from .lang import _
 from .exception import ExceptionDialog, format_exc
 
 class MainWindow(QWidget):
-    _user = ''
-    _passwd = ''
-    _host = ''
-    _db = ''
-
     def __init__(self, user, passwd, host, database):
-        try:
-            srv = host
-            port = '0'
+        srv = host
+        port = '0'
 
-            if ':' in srv:
-                split = srv.split(':')
-                srv = split[0]
-                port = split[1]
+        if ':' in srv:
+            split = srv.split(':')
+            srv = split[0]
+            port = split[1]
 
-            patts.init(host=srv, user=user, passwd=passwd, database=database,
-                       port=port)
-        except Exception:
-            ExceptionDialog(format_exc()).exec_()
-            raise
+        patts.init(host=srv, user=user, passwd=passwd, database=database,
+                   port=port)
 
         super(MainWindow, self).__init__()
 
