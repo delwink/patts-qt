@@ -18,7 +18,8 @@
 import patts
 
 from PyQt4.QtGui import QWidget
-from .config import get
+from PyQt4.QtCore import QObject, SIGNAL
+from .config import get, put
 from .lang import _
 from .exception import ExceptionDialog, format_exc
 
@@ -54,3 +55,11 @@ class MainWindow(QWidget):
         self.resize(int(get('MainWindow', 'width')),
                     int(get('MainWindow', 'height')))
         self.setWindowTitle(_('MainWindow.title').format(host, database, user))
+
+    def closeEvent(self, event):
+        self._save_dims()
+        super(MainWindow, self).closeEvent(event)
+
+    def _save_dims(self):
+        put('MainWindow', 'width', str(self.width()))
+        put('MainWindow', 'height', str(self.height()))
