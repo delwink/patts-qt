@@ -30,7 +30,7 @@ class MainWindow(QWidget):
 
     def __init__(self, user, passwd, host, database):
         try:
-            srv = self._host
+            srv = host
             port = '0'
 
             if ':' in srv:
