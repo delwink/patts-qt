@@ -57,23 +57,8 @@ class PattsApp(QApplication):
 
     def exec_(self):
         if self._user and self._passwd and self._host and self._db:
-            try:
-                srv = self._host
-                port = '0'
-
-                if ':' in srv:
-                    split = srv.split(':')
-                    srv = split[0]
-                    port = split[1]
-
-                patts.init(host=srv, user=self._user, passwd=self._passwd,
-                           database=self._db, port=port)
-
-                self._mwin.show()
-                return super(PattsApp, self).exec_()
-            except Exception:
-                ExceptionDialog(format_exc()).exec_()
-                raise
+            self._mwin.show()
+            return super(PattsApp, self).exec_()
         else:
             if self._cancelled:
                 exit(0)

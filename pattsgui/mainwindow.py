@@ -15,9 +15,12 @@
 ##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
 
+import patts
+
 from PyQt4.QtGui import QWidget
 from .config import get
 from .lang import _
+from .exception import ExceptionDialog, format_exc
 
 class MainWindow(QWidget):
     _user = ''
@@ -26,6 +29,21 @@ class MainWindow(QWidget):
     _db = ''
 
     def __init__(self, user, passwd, host, database):
+        try:
+            srv = self._host
+            port = '0'
+
+            if ':' in srv:
+                split = srv.split(':')
+                srv = split[0]
+                port = split[1]
+
+            patts.init(host=srv, user=user, passwd=passwd, database=database,
+                       port=port)
+        except Exception:
+            ExceptionDialog(format_exc()).exec_()
+            raise
+
         super(MainWindow, self).__init__()
 
         self._user = user
