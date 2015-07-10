@@ -60,20 +60,12 @@ def get(section, key):
 def put(section, key, value):
     needs = get(section, key) != value
 
-    try:
-        """
-        try:
-            if config[section][key] == value:
-                needs = False
-        except KeyError:
-            pass"""
-
-        if needs:
-            config[section][key] = value
-    except KeyError:
-        config[section] = {}
-        config[section][key] = value
-
     if needs:
+        try:
+            config[section][key] = value
+        except KeyError:
+            config[section] = {}
+            config[section][key] = value
+
         with open(CONFIG_PATH, 'w') as f:
             config.write(f)
