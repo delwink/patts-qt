@@ -58,9 +58,7 @@ def get(section, key):
         return DEFAULTS[section][key]
 
 def put(section, key, value):
-    needs = get(section, key) != value
-
-    if needs:
+    if get(section, key) != value:
         try:
             config[section][key] = value
         except KeyError:
