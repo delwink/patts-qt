@@ -29,7 +29,11 @@ DEFAULTS = {
     },
 
     'Login': {
-        'autologin': 'false'
+        'autologin': 'false',
+        'user': '',
+        'passwd': '',
+        'host': '',
+        'database': ''
     },
 
     'MainWindow': {
@@ -54,14 +58,15 @@ def get(section, key):
         return DEFAULTS[section][key]
 
 def put(section, key, value):
-    needs = True
+    needs = get(section, key) != value
 
     try:
+        """
         try:
             if config[section][key] == value:
                 needs = False
         except KeyError:
-            pass
+            pass"""
 
         if needs:
             config[section][key] = value
