@@ -54,11 +54,21 @@ def get(section, key):
         return DEFAULTS[section][key]
 
 def put(section, key, value):
+    needs = True
+
     try:
-        config[section][key] = value
+        try:
+            if config[section][key] == value:
+                needs = False
+        except KeyError:
+            pass
+
+        if needs:
+            config[section][key] = value
     except KeyError:
         config[section] = {}
         config[section][key] = value
 
-    with open(CONFIG_PATH, 'w') as f:
-        config.write(f)
+    if needs:
+        with open(CONFIG_PATH, 'w') as f:
+            config.write(f)
