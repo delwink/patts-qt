@@ -38,11 +38,6 @@ class MainWindow(QWidget):
 
         super(MainWindow, self).__init__()
 
-        self._user = user
-        self._passwd = passwd
-        self._host = host
-        self._db = database
-
         self.resize(int(get('MainWindow', 'width')),
                     int(get('MainWindow', 'height')))
         self.setWindowTitle(_('MainWindow.title').format(host, database, user))
