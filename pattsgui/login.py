@@ -42,16 +42,16 @@ class LoginWindow(QDialog):
         buttonBox.addWidget(cancelButton)
         buttonBox.addWidget(logInButton)
 
-        self.serverInput = QLineEdit()
+        self.serverInput = QLineEdit(self)
         self.serverInput.setPlaceholderText(_('LoginWindow.server'))
 
-        self.dbInput = QLineEdit()
+        self.dbInput = QLineEdit(self)
         self.dbInput.setPlaceholderText(_('LoginWindow.database'))
 
-        self.userInput = QLineEdit()
+        self.userInput = QLineEdit(self)
         self.userInput.setPlaceholderText(_('LoginWindow.user'))
 
-        self.passInput = QLineEdit()
+        self.passInput = QLineEdit(self)
         self.passInput.setPlaceholderText(_('LoginWindow.password'))
         self.passInput.setEchoMode(QLineEdit.Password)
 
@@ -59,12 +59,18 @@ class LoginWindow(QDialog):
         self.autoLogin.setText(_('LoginWindow.autoLogin'))
         self.autoLogin.toggled.connect(self._set_auto)
 
-        try:
-            self.serverInput.setText(get('Login', 'host'))
-            self.dbInput.setText(get('Login', 'database'))
-            self.userInput.setText(get('Login', 'user'))
-        except KeyError:
-            pass
+        self.serverInput.setText(get('Login', 'host'))
+        self.dbInput.setText(get('Login', 'database'))
+        self.userInput.setText(get('Login', 'user'))
+
+        if not self.serverInput.text():
+            self.serverInput.setFocus()
+        elif not self.dbInput.text():
+            self.dbInput.setFocus()
+        elif not self.userInput.text():
+            self.userInput.setFocus()
+        else:
+            self.passInput.setFocus()
 
         if message:
             self.errorLabel = QLabel(_(message))
