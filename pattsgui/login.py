@@ -44,24 +44,12 @@ class LoginWindow(QDialog):
 
         self.serverInput = QLineEdit()
         self.serverInput.setPlaceholderText(_('LoginWindow.server'))
-        try:
-            self.serverInput.setText(get('Login', 'host'))
-        except KeyError:
-            pass
 
         self.dbInput = QLineEdit()
         self.dbInput.setPlaceholderText(_('LoginWindow.database'))
-        try:
-            self.dbInput.setText(get('Login', 'database'))
-        except KeyError:
-            pass
 
         self.userInput = QLineEdit()
         self.userInput.setPlaceholderText(_('LoginWindow.user'))
-        try:
-            self.userInput.setText(get('Login', 'user'))
-        except KeyError:
-            pass
 
         self.passInput = QLineEdit()
         self.passInput.setPlaceholderText(_('LoginWindow.password'))
@@ -70,6 +58,13 @@ class LoginWindow(QDialog):
         self.autoLogin = QCheckBox()
         self.autoLogin.setText(_('LoginWindow.autoLogin'))
         self.autoLogin.toggled.connect(self._set_auto)
+
+        try:
+            self.serverInput.setText(get('Login', 'host'))
+            self.dbInput.setText(get('Login', 'database'))
+            self.userInput.setText(get('Login', 'user'))
+        except KeyError:
+            pass
 
         if message:
             self.errorLabel = QLabel(_(message))
