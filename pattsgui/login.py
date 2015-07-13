@@ -17,7 +17,7 @@
 
 from PyQt4.QtGui import QDialog, QPushButton, QHBoxLayout, QVBoxLayout
 from PyQt4.QtGui import QLineEdit, QDesktopWidget, QLabel, QPalette, QCheckBox
-from PyQt4.QtCore import SIGNAL, QObject, Qt
+from PyQt4.QtCore import Qt
 
 from .lang import _
 from .config import get, put
