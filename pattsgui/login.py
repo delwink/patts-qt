@@ -44,15 +44,19 @@ class LoginWindow(QDialog):
 
         self.serverInput = QLineEdit(self)
         self.serverInput.setPlaceholderText(_('LoginWindow.server'))
+        self.serverInput.setToolTip(_('LoginWindow.serverToolTip'))
 
         self.dbInput = QLineEdit(self)
         self.dbInput.setPlaceholderText(_('LoginWindow.database'))
+        self.dbInput.setToolTip(_('LoginWindow.databaseToolTip'))
 
         self.userInput = QLineEdit(self)
         self.userInput.setPlaceholderText(_('LoginWindow.user'))
+        self.userInput.setToolTip(_('LoginWindow.userToolTip'))
 
         self.passInput = QLineEdit(self)
         self.passInput.setPlaceholderText(_('LoginWindow.password'))
+        self.passInput.setToolTip(_('LoginWindow.passwordToolTip'))
         self.passInput.setEchoMode(QLineEdit.Password)
 
         self.autoLogin = QCheckBox()

@@ -3,19 +3,23 @@ OK = OK
 
 Exception.label = An error occurred:
 
-LoginWindow.title = PATTS Database Login
-LoginWindow.server = Server
-LoginWindow.database = Database Name
-LoginWindow.user = Username
-LoginWindow.password = Password
 LoginWindow.autoLogin = Remember Me
-LoginWindow.logIn = Log in
 LoginWindow.cancel = Cancel
+LoginWindow.database = Database Name
+LoginWindow.databaseToolTip = Name of the specific database on the server
+LoginWindow.logIn = Log in
+LoginWindow.password = Password
+LoginWindow.passwordToolTip = Password with which to authenticate
+LoginWindow.server = Server
+LoginWindow.serverToolTip = IP address, hostname, or domain name of the server
+LoginWindow.title = PATTS Database Login
+LoginWindow.user = Username
+LoginWindow.userToolTip = User as which to log into the database
 
-Login.badUser = Invalid username
-Login.badPass = Invalid password
-Login.badHost = Invalid server address
-Login.badDatabase = Invalid database name
 Login.accessDenied = Access denied
+Login.badDatabase = Invalid database name
+Login.badHost = Invalid server address
+Login.badPass = Invalid password
+Login.badUser = Invalid username
 
 MainWindow.title = PATTS - Server: {}, DB: {}, User: {}
