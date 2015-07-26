@@ -16,7 +16,7 @@ setup(
     author='David McMackins II',
     author_email='david@delwink.com',
     url='http://delwink.com/software/patts.html',
-    install_requires=['patts', 'sqon'],
+    install_requires=['patts'],
     packages=['pattsgui'],
     package_data={'': ['COPYING']},
     package_dir={'pattsgui': 'pattsgui'},

@@ -14,15 +14,13 @@ run.
 |--------|----------------------------------------|
 | PyQt4  | GUI Toolkit                            |
 | patts  | PATTS-specific features and operations |
-| sqon   | Database connectivity                  |
 
 On Debian, PyQt4 can be installed with
 
     # apt-get install python3-pyqt4
 
-The `patts` and `sqon` modules can be downloaded from
-[Delwink's website][2]. The instructions and dependencies of those modules are
-described in their documentation.
+The `patts` module can be downloaded from [Delwink's website][2]. The
+instructions and dependencies of it is described in its documentation.
 
 Hacking
 -------
