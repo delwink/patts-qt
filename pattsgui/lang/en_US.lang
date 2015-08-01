@@ -3,6 +3,9 @@ OK = OK
 
 Exception.label = An error occurred:
 
+Help = Help
+Help.About = About
+
 LoginWindow.autoLogin = Remember Me
 LoginWindow.cancel = Cancel
 LoginWindow.database = Database Name

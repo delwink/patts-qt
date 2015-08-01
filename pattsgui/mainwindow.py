@@ -17,13 +17,13 @@
 
 import patts
 
-from PyQt4.QtGui import QWidget
+from PyQt4.QtGui import QAction, QMainWindow
 from PyQt4.QtCore import QObject, SIGNAL
 from .config import get, put
 from .lang import _
 from .exception import ExceptionDialog, format_exc
 
-class MainWindow(QWidget):
+class MainWindow(QMainWindow):
     def __init__(self, user, passwd, host, database):
         srv = host
         port = '0'
@@ -37,6 +37,12 @@ class MainWindow(QWidget):
                    port=port)
 
         super(MainWindow, self).__init__()
+
+        aboutAction = QAction(_('Help.About'), self)
+
+        menuBar = self.menuBar()
+        helpMenu = menuBar.addMenu(_('Help'))
+        helpMenu.addAction(aboutAction)
 
         self.resize(int(get('MainWindow', 'width')),
                     int(get('MainWindow', 'height')))
