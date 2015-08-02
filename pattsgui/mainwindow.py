@@ -38,11 +38,11 @@ class MainWindow(QMainWindow):
 
         super(MainWindow, self).__init__()
 
-        aboutAction = QAction(_('Help.About'), self)
+        about_action = QAction(_('Help.About'), self)
 
-        menuBar = self.menuBar()
-        helpMenu = menuBar.addMenu(_('Help'))
-        helpMenu.addAction(aboutAction)
+        menu_bar = self.menuBar()
+        help_menu = menu_bar.addMenu(_('Help'))
+        help_menu.addAction(about_action)
 
         self.resize(int(get('MainWindow', 'width')),
                     int(get('MainWindow', 'height')))
