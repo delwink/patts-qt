@@ -19,6 +19,7 @@ import patts
 
 from PyQt4.QtGui import QAction, QMainWindow
 from PyQt4.QtCore import QObject, SIGNAL
+from .aboutdialog import AboutDialog
 from .config import get, put
 from .lang import _
 from .exception import ExceptionDialog, format_exc
@@ -38,11 +39,12 @@ class MainWindow(QMainWindow):
 
         super(MainWindow, self).__init__()
 
-        about_action = QAction(_('Help.About'), self)
+        aboutAction = QAction(_('Help.About'), self)
+        aboutAction.triggered.connect(self._show_about)
 
-        menu_bar = self.menuBar()
-        help_menu = menu_bar.addMenu(_('Help'))
-        help_menu.addAction(about_action)
+        menuBar = self.menuBar()
+        helpMenu = menuBar.addMenu(_('Help'))
+        helpMenu.addAction(aboutAction)
 
         self.resize(int(get('MainWindow', 'width')),
                     int(get('MainWindow', 'height')))
@@ -55,3 +57,6 @@ class MainWindow(QMainWindow):
     def _save_dims(self):
         put('MainWindow', 'width', str(self.width()))
         put('MainWindow', 'height', str(self.height()))
+
+    def _show_about(self):
+        AboutDialog(self).exec_()

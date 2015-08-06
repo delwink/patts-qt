@@ -15,8 +15,18 @@
 ##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
 
-from PyQt4.QtGui import QDialog
+from PyQt4.QtGui import QDialog, QPushButton, QVBoxLayout
+from .lang import _
 
 class AboutDialog(QDialog):
     def __init__(self, parent=None):
         super(AboutDialog, self).__init__(parent)
+
+        okButton = QPushButton(_('OK'))
+        okButton.clicked.connect(self.accept)
+
+        layout = QVBoxLayout()
+        layout.addWidget(okButton)
+
+        self.setLayout(layout)
+        self.resize(600, 400)
