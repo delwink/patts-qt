@@ -15,7 +15,8 @@
 ##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
 
-from PyQt4.QtGui import QDialog, QPushButton, QVBoxLayout
+from patts import PATTS_COPYRIGHT
+from PyQt4.QtGui import QDialog, QLabel, QPushButton, QVBoxLayout
 from .lang import _
 
 class AboutDialog(QDialog):
@@ -26,6 +27,10 @@ class AboutDialog(QDialog):
         okButton.clicked.connect(self.accept)
 
         layout = QVBoxLayout()
+
+        for line in PATTS_COPYRIGHT.split('\n'):
+            layout.addWidget(QLabel(line))
+
         layout.addWidget(okButton)
 
         self.setLayout(layout)
