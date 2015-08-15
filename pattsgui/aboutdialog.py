@@ -28,6 +28,7 @@ class AboutDialog(QDialog):
 
         layout = QVBoxLayout()
 
+        # TODO: more than just backend copyright info
         for line in PATTS_COPYRIGHT.split('\n'):
             layout.addWidget(QLabel(line))
 
