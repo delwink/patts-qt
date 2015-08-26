@@ -37,7 +37,7 @@ class MainWindow(QMainWindow):
         patts.init(host=srv, user=user, passwd=passwd, database=database,
                    port=port)
 
-        super(MainWindow, self).__init__()
+        super().__init__()
 
         aboutAction = QAction(_('Help.About'), self)
         aboutAction.triggered.connect(self._show_about)
@@ -52,7 +52,7 @@ class MainWindow(QMainWindow):
 
     def closeEvent(self, event):
         self._save_dims()
-        super(MainWindow, self).closeEvent(event)
+        super().closeEvent(event)
 
     def _save_dims(self):
         put('MainWindow', 'width', str(self.width()))

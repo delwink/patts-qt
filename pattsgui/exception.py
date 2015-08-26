@@ -22,7 +22,7 @@ from .lang import _
 
 class ExceptionDialog(QDialog):
     def __init__(self, exc, parent=None):
-        super(ExceptionDialog, self).__init__(parent)
+        super().__init__(parent)
 
         lbl = QLabel(_('Exception.label'))
 

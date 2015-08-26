@@ -21,7 +21,7 @@ from .lang import _
 
 class AboutDialog(QDialog):
     def __init__(self, parent=None):
-        super(AboutDialog, self).__init__(parent)
+        super().__init__(parent)
 
         okButton = QPushButton(_('OK'))
         okButton.clicked.connect(self.accept)

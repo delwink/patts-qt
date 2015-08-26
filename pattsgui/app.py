@@ -25,7 +25,7 @@ from .exception import ExceptionDialog, format_exc
 
 class PattsApp(QApplication):
     def __init__(self, argv):
-        super(PattsApp, self).__init__(argv)
+        super().__init__(argv)
 
         self._cancelled = False
         self._mwin = None
@@ -82,7 +82,7 @@ class PattsApp(QApplication):
     def exec_(self):
         if self._user and self._passwd and self._host and self._db:
             self._mwin.show()
-            return super(PattsApp, self).exec_()
+            return super().exec_()
         else:
             if self._cancelled:
                 exit(0)
