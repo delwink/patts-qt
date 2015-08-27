@@ -18,7 +18,12 @@ setup(
     url='http://delwink.com/software/patts.html',
     install_requires=['patts'],
     packages=['pattsgui'],
-    package_data={'': ['COPYING']},
+
+    package_data={
+        '': ['COPYING'],
+        'pattsgui': ['lang/*']
+    },
+
     package_dir={'pattsgui': 'pattsgui'},
     scripts=['patts-qt'],
     include_package_data=True,
