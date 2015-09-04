@@ -15,12 +15,13 @@
 ##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
 
-from patts import PATTS_COPYRIGHT
-from PyQt4.QtGui import QDialog, QLabel, QPushButton, QVBoxLayout
+from PyQt4.QtGui import QDialog, QLabel, QPushButton, QVBoxLayout, QWidget
 from .lang import _
 
+__version__ = '0.0.0'
+
 class AboutDialog(QDialog):
-    def __init__(self, parent=None):
+    def __init__(self, patts_version, parent=None):
         super().__init__(parent)
 
         okButton = QPushButton(_('OK'))
@@ -28,11 +29,19 @@ class AboutDialog(QDialog):
 
         layout = QVBoxLayout()
 
-        # TODO: more than just backend copyright info
-        for line in PATTS_COPYRIGHT.split('\n'):
-            layout.addWidget(QLabel(line))
+        title = QLabel("PATTS Ain't Time Tracking Software\n"
+                       'Version {}'.format(__version__))
+
+        title_font = title.font()
+        title_font.setPointSize(20)
+        title_font.setBold(True)
+        title.setFont(title_font)
+
+        layout.addWidget(title)
+        layout.addWidget(QLabel('patts module v{}'.format(patts_version)))
+        layout.addWidget(QLabel(_('About.copyright').replace('\\n', '\n')))
+        layout.addWidget(QLabel(_('About.license').replace('\\n', '\n')))
 
         layout.addWidget(okButton)
 
         self.setLayout(layout)
-        self.resize(600, 400)

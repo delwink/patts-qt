@@ -20,7 +20,6 @@ from sys import argv
 from pattsgui import PattsApp
 
 __title__ = 'patts-qt'
-__version__ = '0.0.0'
 __author__ = 'David McMackins II'
 __license__ = 'AGPLv3'
 __copyright__ = 'Copyright 2015 Delwink, LLC'

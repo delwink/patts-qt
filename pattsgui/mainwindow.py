@@ -65,4 +65,4 @@ class MainWindow(QMainWindow):
             put('MainWindow', 'height', str(self.height()))
 
     def _show_about(self):
-        AboutDialog(self).exec_()
+        AboutDialog(patts.__version__, self).exec_()
