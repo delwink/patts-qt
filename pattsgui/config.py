@@ -38,7 +38,8 @@ DEFAULTS = {
 
     'MainWindow': {
         'width': '800',
-        'height': '600'
+        'height': '600',
+        'max': 'false'
     }
 }
 

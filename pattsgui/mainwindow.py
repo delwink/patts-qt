@@ -18,7 +18,7 @@
 import patts
 
 from PyQt4.QtGui import QAction, QMainWindow
-from PyQt4.QtCore import QObject, SIGNAL
+from PyQt4.QtCore import QObject, Qt, SIGNAL
 from .aboutdialog import AboutDialog
 from .config import get, put
 from .lang import _
@@ -48,6 +48,8 @@ class MainWindow(QMainWindow):
 
         self.resize(int(get('MainWindow', 'width')),
                     int(get('MainWindow', 'height')))
+        if get('MainWindow', 'max').lower() == 'true':
+            self.showMaximized()
         self.setWindowTitle(_('MainWindow.title').format(host, database, user))
 
     def closeEvent(self, event):
@@ -55,8 +57,12 @@ class MainWindow(QMainWindow):
         super().closeEvent(event)
 
     def _save_dims(self):
-        put('MainWindow', 'width', str(self.width()))
-        put('MainWindow', 'height', str(self.height()))
+        if self.windowState() & Qt.WindowMaximized:
+            put('MainWindow', 'max', 'true')
+        else:
+            put('MainWindow', 'max', 'false')
+            put('MainWindow', 'width', str(self.width()))
+            put('MainWindow', 'height', str(self.height()))
 
     def _show_about(self):
         AboutDialog(self).exec_()
