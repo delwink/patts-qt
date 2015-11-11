@@ -15,13 +15,36 @@
 ##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
 
-import patts
-
-from PyQt4.QtGui import QApplication
+from patts import setup
+from PyQt4.QtGui import QApplication, QPushButton, QDialog, QHBoxLayout, QLabel
+from PyQt4.QtGui import QVBoxLayout
 from .config import get, put
+from .hostname import split_host
+from .lang import _
 from .login import get_login
 from .mainwindow import MainWindow
 from .exception import ExceptionDialog, format_exc
+
+class SetupDialog(QDialog):
+    def __init__(self):
+        super().__init__()
+
+        question = QLabel(_('Setup.want'))
+        yesButton = QPushButton(_('yes'))
+        noButton = QPushButton(_('no'))
+        layout = QVBoxLayout()
+        buttonBox = QHBoxLayout()
+
+        buttonBox.addStretch(1)
+        buttonBox.addWidget(noButton)
+        buttonBox.addWidget(yesButton)
+        yesButton.setDefault(True)
+        yesButton.clicked.connect(self.accept)
+        noButton.clicked.connect(self.reject)
+
+        layout.addWidget(question)
+        layout.addLayout(buttonBox)
+        self.setLayout(layout)
 
 class PattsApp(QApplication):
     def __init__(self, argv):
@@ -29,6 +52,9 @@ class PattsApp(QApplication):
 
         self._cancelled = False
         self._mwin = None
+        self._sd = SetupDialog()
+        self._sd.accepted.connect(self._setup)
+        self._sd.rejected.connect(self._bad_db)
 
         try:
             if get('Login', 'autologin').lower() == 'true':
@@ -49,8 +75,8 @@ class PattsApp(QApplication):
                 if type(e) is Exception:
                     errno = int(str(e))
 
-                    if errno == 1044:
-                        self._login('Login.badDatabase')
+                    if errno in (1044, 1049):
+                        self._sd.exec_()
                     elif errno == 1045:
                         self._login('Login.accessDenied')
                     elif errno == 2005:
@@ -103,3 +129,16 @@ class PattsApp(QApplication):
                     raise
 
             return self.exec_()
+
+    def _setup(self):
+        try:
+            srv, port = split_host(self._host)
+            setup(host=srv, user=self._user, passwd=self._passwd,
+                  database=self._db, port=port)
+            self._login()
+        except:
+            ExceptionDialog(format_exc()).exec_()
+            raise
+
+    def _bad_db(self):
+        self._login('Login.badDatabase')

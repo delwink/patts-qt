@@ -21,18 +21,13 @@ from PyQt4.QtGui import QAction, QMainWindow
 from PyQt4.QtCore import QObject, Qt, SIGNAL
 from .aboutdialog import AboutDialog
 from .config import get, put
+from .hostname import split_host
 from .lang import _
 from .exception import ExceptionDialog, format_exc
 
 class MainWindow(QMainWindow):
     def __init__(self, user, passwd, host, database):
-        srv = host
-        port = '0'
-
-        if ':' in srv:
-            split = srv.split(':')
-            srv = split[0]
-            port = split[1]
+        srv, port = split_host(host)
 
         patts.init(host=srv, user=user, passwd=passwd, database=database,
                    port=port)
