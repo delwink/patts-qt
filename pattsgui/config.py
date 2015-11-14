@@ -25,7 +25,8 @@ config = ConfigParser()
 
 DEFAULTS = {
     'Global': {
-        'lang': 'en_US'
+        'lang': 'en_US',
+        'firstrun': 'true'
     },
 
     'Login': {

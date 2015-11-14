@@ -15,9 +15,10 @@
 ##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
 
-from os.path import join, realpath, dirname
+from os import listdir
+from os.path import dirname, join, realpath
 from configparser import ConfigParser
-from .config import get
+from .config import get, put
 
 _LANG = get('Global', 'lang')
 _LDIR = join(dirname(realpath(__file__)), 'lang/')
@@ -25,9 +26,17 @@ _lfile = ConfigParser()
 
 _lfile.read(join(_LDIR, _LANG + '.lang'))
 
+def set_lang(lang):
+    put('Global', 'lang', lang)
+    _LANG = lang
+    _lfile = ConfigParser()
+    _lfile.read(join(_LDIR, _LANG + '.lang'))
+
+def get_langs():
+    return [f[:-5] for f in listdir(_LDIR)]
+
 def _(s):
     try:
         return _lfile[_LANG][s]
     except KeyError:
         return s
-        

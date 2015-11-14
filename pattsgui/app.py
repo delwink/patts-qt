@@ -16,14 +16,49 @@
 ##
 
 from patts import setup
-from PyQt4.QtGui import QApplication, QPushButton, QDialog, QHBoxLayout, QLabel
-from PyQt4.QtGui import QVBoxLayout
+from PyQt4.QtGui import QApplication, QComboBox, QDialog, QHBoxLayout, QLabel
+from PyQt4.QtGui import QPushButton, QVBoxLayout
 from .config import get, put
 from .hostname import split_host
-from .lang import _
+from .lang import _, get_langs, set_lang
 from .login import get_login
 from .mainwindow import MainWindow
 from .exception import ExceptionDialog, format_exc
+
+class LanguageDialog(QDialog):
+    def __init__(self):
+        super().__init__()
+
+        text = QLabel('Choose a language: ') # intentionally English
+        self._selection = QComboBox()
+        okButton = QPushButton(_('OK'))
+        layout = QVBoxLayout()
+        inputBox = QHBoxLayout()
+        buttonBox = QHBoxLayout()
+
+        langs = get_langs()
+        self._selection.addItems(langs)
+        self._selection.currentIndexChanged.connect(self._set_lang)
+        self._lang = langs.index('en_US')
+        self._selection.setCurrentIndex(self._lang)
+        okButton.clicked.connect(self.accept)
+
+        inputBox.addWidget(text)
+        inputBox.addWidget(self._selection)
+        buttonBox.addStretch(2)
+        buttonBox.addWidget(okButton)
+
+        layout.addLayout(inputBox)
+        layout.addLayout(buttonBox)
+
+        self.setLayout(layout)
+
+    def _set_lang(self, s):
+        self._lang = s
+
+    @property
+    def lang(self):
+        return self._selection.itemText(self._lang)
 
 class SetupDialog(QDialog):
     def __init__(self):
@@ -55,6 +90,15 @@ class PattsApp(QApplication):
         self._sd = SetupDialog()
         self._sd.accepted.connect(self._setup)
         self._sd.rejected.connect(self._bad_db)
+
+        if get('Global', 'firstrun').lower() == 'true':
+            ld = LanguageDialog()
+            rc = ld.exec_()
+            if rc != QDialog.Accepted:
+                exit(0) # cancelled
+
+            set_lang(ld.lang)
+            put('Global', 'firstrun', 'false')
 
         try:
             if get('Login', 'autologin').lower() == 'true':
