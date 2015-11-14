@@ -2,7 +2,7 @@ from setuptools import setup
 import re
 
 version = ''
-with open('patts-qt', 'r') as f:
+with open('pattsgui/aboutdialog.py', 'r') as f:
     version = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]',
                         f.read(), re.MULTILINE).group(1)
 
