@@ -21,9 +21,13 @@ from PyQt4.QtGui import QAction, QMainWindow
 from PyQt4.QtCore import QObject, Qt, SIGNAL
 from .aboutdialog import AboutDialog
 from .config import get, put
+from .editor import Editor
 from .hostname import split_host
 from .lang import _
 from .exception import ExceptionDialog, format_exc
+
+def new_user():
+    pass
 
 class MainWindow(QMainWindow):
     def __init__(self, user, passwd, host, database):
@@ -34,11 +38,17 @@ class MainWindow(QMainWindow):
 
         super().__init__()
 
+        menuBar = self.menuBar()
+
+        if patts.have_admin():
+            adminMenu = menuBar.addMenu(_('Admin'))
+            usersAction = QAction(_('Admin.Users'), self)
+            usersAction.triggered.connect(self._show_users)
+            adminMenu.addAction(usersAction)
+
+        helpMenu = menuBar.addMenu(_('Help'))
         aboutAction = QAction(_('Help.About'), self)
         aboutAction.triggered.connect(self._show_about)
-
-        menuBar = self.menuBar()
-        helpMenu = menuBar.addMenu(_('Help'))
         helpMenu.addAction(aboutAction)
 
         self.resize(int(get('MainWindow', 'width')),
@@ -49,6 +59,7 @@ class MainWindow(QMainWindow):
 
     def closeEvent(self, event):
         self._save_dims()
+        patts.cleanup()
         super().closeEvent(event)
 
     def _save_dims(self):
@@ -61,3 +72,10 @@ class MainWindow(QMainWindow):
 
     def _show_about(self):
         AboutDialog(patts.__version__, self).exec_()
+
+    def _show_users(self):
+        try:
+            Editor(patts.get_users, patts.get_user_byid, new_user,
+                   patts.delete_user, 'User').exec_()
+        except Exception as e:
+            ExceptionDialog(format_exc()).exec_()
