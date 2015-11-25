@@ -33,7 +33,14 @@ def set_lang(lang):
     _lfile.read(join(_LDIR, _LANG + '.lang'))
 
 def get_langs():
-    return [f[:-5] for f in listdir(_LDIR)]
+    tempconfig = ConfigParser()
+    lang_map = {}
+    for fname in listdir(_LDIR):
+        lang = fname[:-5]
+        tempconfig.read(join(_LDIR, fname))
+        lang_map[tempconfig[lang]['lang']] = lang
+
+    return lang_map
 
 def _(s):
     try:
