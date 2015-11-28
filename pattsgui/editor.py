@@ -21,27 +21,30 @@ from PyQt4.QtCore import QAbstractTableModel, Qt
 from PyQt4.QtGui import QDialog, QTableView, QVBoxLayout
 from .lang import _
 
-class UserTableModel(QAbstractTableModel):
-    def __init__(self, parent=None):
+class PattsTableModel(QAbstractTableModel):
+    def __init__(self, table_name, get_table_info, fields, parent=None):
         super().__init__(parent)
 
-        user_info = patts.get_users()
+        table_info = get_table_info()
+        self._table_name = table_name
 
-        self._keys = [k for k in user_info]
+        self._keys = [k for k in table_info]
         self._keys.sort()
 
-        self._fields = (
-            'state', 'isAdmin', 'firstName', 'middleName', 'lastName'
-        )
+        self._fields = fields
 
-        self._users = []
+        self._init_rows(table_info)
+        self._orig = [row for row in self._rows]
+
+    def _init_rows(self, table_info):
+        self._rows = []
         for k in self._keys:
-            user = user_info[k]
-            field_data = [user[field] for field in self._fields]
-            self._users.append(field_data)
+            row = table_info[k]
+            field_data = [row[field] for field in self._fields]
+            self._rows.append(field_data)
 
     def rowCount(self, parent):
-        return len(self._users)
+        return len(self._rows)
 
     def columnCount(self, parent):
         return len(self._fields)
@@ -53,19 +56,36 @@ class UserTableModel(QAbstractTableModel):
         row = index.row()
         col = index.column()
 
-        if role == Qt.DisplayRole:
-            return self._users[row][col]
+        if role in (Qt.DisplayRole, Qt.EditRole):
+            return self._rows[row][col]
+
+    def setData(self, index, value, role=Qt.EditRole):
+        row = index.row()
+        col = index.column()
+
+        if role == Qt.EditRole:
+            self._rows[row][col] = value
+            self.dataChanged.emit(index, index)
+
+            return True
+
+        return False
 
     def headerData(self, section, orientation, role):
         if role == Qt.DisplayRole:
             if orientation == Qt.Horizontal:
-                return _('User.' + self._fields[section])
+                return _('.'.join((self.table, self._fields[section])))
 
             return self._keys[section]
 
     @property
     def table(self):
-        return 'User'
+        return self._table_name
+
+class UserTableModel(PattsTableModel):
+    def __init__(self, parent=None):
+        fields = ('state', 'isAdmin', 'firstName', 'middleName', 'lastName')
+        super().__init__('User', patts.get_users, fields, parent)
 
 class Editor(QDialog):
     def __init__(self, model):
@@ -80,3 +100,4 @@ class Editor(QDialog):
         self.setLayout(layout)
 
         self.setWindowTitle(_('Admin.edit' + model.table))
+        self.resize(600, 300)
