@@ -39,3 +39,9 @@ Login.badUser = Invalid username
 MainWindow.title = PATTS - Server: {}, DB: {}, User: {}
 
 Setup.want = The database was not found. Create a new PATTS database?
+
+User.state = Active
+User.isAdmin = Admin Rights
+User.firstName = First Name
+User.middleName = Middle Name
+User.lastName = Last Name

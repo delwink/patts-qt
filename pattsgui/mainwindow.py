@@ -21,7 +21,7 @@ from PyQt4.QtGui import QAction, QMainWindow
 from PyQt4.QtCore import QObject, Qt, SIGNAL
 from .aboutdialog import AboutDialog
 from .config import get, put
-from .editor import Editor
+from .editor import Editor, UserTableModel
 from .hostname import split_host
 from .lang import _
 from .exception import ExceptionDialog, format_exc
@@ -75,7 +75,6 @@ class MainWindow(QMainWindow):
 
     def _show_users(self):
         try:
-            Editor(patts.get_users, patts.get_user_byid, new_user,
-                   patts.delete_user, 'User').exec_()
+            Editor(UserTableModel()).exec_()
         except Exception as e:
             ExceptionDialog(format_exc()).exec_()

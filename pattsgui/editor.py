@@ -15,18 +15,68 @@
 ##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
 
-from PyQt4.QtGui import QDialog, QTableWidget
+import patts
+
+from PyQt4.QtCore import QAbstractTableModel, Qt
+from PyQt4.QtGui import QDialog, QTableView, QVBoxLayout
 from .lang import _
 
+class UserTableModel(QAbstractTableModel):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+
+        user_info = patts.get_users()
+
+        self._keys = [k for k in user_info]
+        self._keys.sort()
+
+        self._fields = (
+            'state', 'isAdmin', 'firstName', 'middleName', 'lastName'
+        )
+
+        self._users = []
+        for k in self._keys:
+            user = user_info[k]
+            field_data = [user[field] for field in self._fields]
+            self._users.append(field_data)
+
+    def rowCount(self, parent):
+        return len(self._users)
+
+    def columnCount(self, parent):
+        return len(self._fields)
+
+    def flags(self, index):
+        return Qt.ItemIsEditable | Qt.ItemIsEnabled
+
+    def data(self, index, role):
+        row = index.row()
+        col = index.column()
+
+        if role == Qt.DisplayRole:
+            return self._users[row][col]
+
+    def headerData(self, section, orientation, role):
+        if role == Qt.DisplayRole:
+            if orientation == Qt.Horizontal:
+                return _('User.' + self._fields[section])
+
+            return self._keys[section]
+
+    @property
+    def table(self):
+        return 'User'
+
 class Editor(QDialog):
-    def __init__(self, get, byid, add, rem, table):
+    def __init__(self, model):
         super().__init__()
 
-        self._get = get
-        self._byid = byid
-        self._add = add
-        self._del = rem
-        self._table = table
-        self._changes = {}
+        self._view = QTableView()
+        self._view.setModel(model)
 
-        self.setWindowTitle(_('Admin.edit' + table))
+        layout = QVBoxLayout()
+        layout.addWidget(self._view)
+
+        self.setLayout(layout)
+
+        self.setWindowTitle(_('Admin.edit' + model.table))
