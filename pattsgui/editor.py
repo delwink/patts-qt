@@ -18,8 +18,36 @@
 import patts
 
 from PyQt4.QtCore import QAbstractTableModel, Qt
-from PyQt4.QtGui import QDialog, QTableView, QVBoxLayout
+from PyQt4.QtGui import QApplication, QDialog, QGraphicsWidget, QStyle
+from PyQt4.QtGui import QStyledItemDelegate, QStyleOptionButton, QTableView
+from PyQt4.QtGui import QTableWidgetItem, QVBoxLayout
 from .lang import _
+
+class CheckBox(QStyledItemDelegate):
+    def __init__(self, parent=None):
+        QGraphicsWidget.__init__(self)
+
+    def flags(self, index):
+        return Qt.ItemIsEditable | Qt.ItemIsUserCheckable | Qt.ItemIsEnabled
+
+    def paint(self, painter, option, index):
+        item = QTableWidgetItem()
+        item.setFlags(Qt.ItemIsUserCheckable | Qt.ItemIsEnabled)
+
+        box = QStyleOptionButton()
+        box.palette = option.palette
+        box.rect = option.rect
+        box.state = QStyle.State_Enabled
+
+        data = index.model().data(index, Qt.EditRole)
+        if data:
+            box.state |= QStyle.State_On
+        else:
+            box.state |= QStyle.State_Off
+
+        style = QApplication.instance().style()
+        style.drawControl(QStyle.CE_CheckBox, box, painter)
+        painter.restore()
 
 class PattsTableModel(QAbstractTableModel):
     def __init__(self, table_name, get_table_info, fields, parent=None):
@@ -33,10 +61,10 @@ class PattsTableModel(QAbstractTableModel):
 
         self._fields = fields
 
-        self._init_rows(table_info)
+        self.init_rows(table_info)
         self._orig = [row for row in self._rows]
 
-    def _init_rows(self, table_info):
+    def init_rows(self, table_info):
         self._rows = []
         for k in self._keys:
             row = table_info[k]
@@ -86,6 +114,26 @@ class UserTableModel(PattsTableModel):
     def __init__(self, parent=None):
         fields = ('state', 'isAdmin', 'firstName', 'middleName', 'lastName')
         super().__init__('User', patts.get_users, fields, parent)
+
+    def flags(self, index):
+        flags = super().flags(index)
+        if self._fields[index.column()] in ('state', 'isAdmin'):
+            flags |= Qt.ItemIsUserCheckable
+
+        return flags
+
+    def data(self, index, role=Qt.DisplayRole):
+        if self._fields[index.column()] in ('state', 'isAdmin'):
+            val = super().data(index, Qt.DisplayRole)
+            if role == Qt.CheckStateRole:
+                if val:
+                    return Qt.Checked
+                else:
+                    return Qt.Unchecked
+            else:
+                return None
+
+        return super().data(index, role)
 
 class Editor(QDialog):
     def __init__(self, model):
