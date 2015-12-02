@@ -19,35 +19,9 @@ import patts
 
 from PyQt4.QtCore import QAbstractTableModel, Qt
 from PyQt4.QtGui import QApplication, QDialog, QGraphicsWidget, QStyle
-from PyQt4.QtGui import QStyledItemDelegate, QStyleOptionButton, QTableView
-from PyQt4.QtGui import QTableWidgetItem, QVBoxLayout
+from PyQt4.QtGui import QStyleOptionButton, QTableView, QTableWidgetItem
+from PyQt4.QtGui import QVBoxLayout
 from .lang import _
-
-class CheckBox(QStyledItemDelegate):
-    def __init__(self, parent=None):
-        QGraphicsWidget.__init__(self)
-
-    def flags(self, index):
-        return Qt.ItemIsEditable | Qt.ItemIsUserCheckable | Qt.ItemIsEnabled
-
-    def paint(self, painter, option, index):
-        item = QTableWidgetItem()
-        item.setFlags(Qt.ItemIsUserCheckable | Qt.ItemIsEnabled)
-
-        box = QStyleOptionButton()
-        box.palette = option.palette
-        box.rect = option.rect
-        box.state = QStyle.State_Enabled
-
-        data = index.model().data(index, Qt.EditRole)
-        if data:
-            box.state |= QStyle.State_On
-        else:
-            box.state |= QStyle.State_Off
-
-        style = QApplication.instance().style()
-        style.drawControl(QStyle.CE_CheckBox, box, painter)
-        painter.restore()
 
 class PattsTableModel(QAbstractTableModel):
     def __init__(self, table_name, get_table_info, fields, parent=None):
