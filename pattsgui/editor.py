@@ -24,7 +24,8 @@ from PyQt4.QtGui import QVBoxLayout
 from .lang import _
 
 class PattsTableModel(QAbstractTableModel):
-    def __init__(self, table_name, get_table_info, fields, parent=None):
+    def __init__(self, table_name, get_table_info, fields, bool_fields,
+                 parent=None):
         super().__init__(parent)
 
         table_info = get_table_info()
@@ -34,6 +35,7 @@ class PattsTableModel(QAbstractTableModel):
         self._keys.sort()
 
         self._fields = fields
+        self._bool_fields = bool_fields
 
         self.init_rows(table_info)
         self._orig = [row for row in self._rows]
@@ -52,14 +54,31 @@ class PattsTableModel(QAbstractTableModel):
         return len(self._fields)
 
     def flags(self, index):
-        return Qt.ItemIsEditable | Qt.ItemIsEnabled
+        flags = Qt.ItemIsEditable | Qt.ItemIsEnabled
+        if self._fields[index.column()] in self._bool_fields:
+            flags |= Qt.ItemIsUserCheckable
 
-    def data(self, index, role):
+        return flags
+
+    def _raw_data(self, index, role):
         row = index.row()
         col = index.column()
 
         if role in (Qt.DisplayRole, Qt.EditRole):
             return self._rows[row][col]
+
+    def data(self, index, role):
+        if self._fields[index.column()] in self._bool_fields:
+            if role == Qt.CheckStateRole:
+                if self._raw_data(index, Qt.DisplayRole):
+                    return Qt.Checked
+                else:
+                    return Qt.Unchecked
+            else:
+                return None
+
+        return self._raw_data(index, role)
+                
 
     def setData(self, index, value, role=Qt.EditRole):
         row = index.row()
@@ -87,27 +106,8 @@ class PattsTableModel(QAbstractTableModel):
 class UserTableModel(PattsTableModel):
     def __init__(self, parent=None):
         fields = ('state', 'isAdmin', 'firstName', 'middleName', 'lastName')
-        super().__init__('User', patts.get_users, fields, parent)
-
-    def flags(self, index):
-        flags = super().flags(index)
-        if self._fields[index.column()] in ('state', 'isAdmin'):
-            flags |= Qt.ItemIsUserCheckable
-
-        return flags
-
-    def data(self, index, role=Qt.DisplayRole):
-        if self._fields[index.column()] in ('state', 'isAdmin'):
-            val = super().data(index, Qt.DisplayRole)
-            if role == Qt.CheckStateRole:
-                if val:
-                    return Qt.Checked
-                else:
-                    return Qt.Unchecked
-            else:
-                return None
-
-        return super().data(index, role)
+        bool_fields = ('state', 'isAdmin')
+        super().__init__('User', patts.get_users, fields, bool_fields, parent)
 
 class Editor(QDialog):
     def __init__(self, model):
