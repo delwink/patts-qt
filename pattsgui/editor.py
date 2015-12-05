@@ -84,7 +84,7 @@ class PattsTableModel(QAbstractTableModel):
         row = index.row()
         col = index.column()
 
-        if role == Qt.EditRole:
+        if role in (Qt.EditRole, Qt.CheckStateRole):
             self._rows[row][col] = value
             self.dataChanged.emit(index, index)
 
