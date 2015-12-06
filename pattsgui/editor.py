@@ -78,18 +78,23 @@ class PattsTableModel(QAbstractTableModel):
                 return None
 
         return self._raw_data(index, role)
-                
+
+    def _set(self, index, value):
+        self._rows[index.row()][index.column()] = value
+        self.dataChanged.emit(index, index)
+        return True
 
     def setData(self, index, value, role=Qt.EditRole):
         row = index.row()
         col = index.column()
 
-        if role in (Qt.EditRole, Qt.CheckStateRole):
-            self._rows[row][col] = value
-            self.dataChanged.emit(index, index)
+        if self._fields[index.column()] in self._bool_fields:
+            if role == Qt.CheckStateRole:
+                return self._set(index, value)
+            return False
 
-            return True
-
+        if role == Qt.EditRole:
+            return self._set(index, value)
         return False
 
     def headerData(self, section, orientation, role):
