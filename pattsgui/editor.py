@@ -18,9 +18,9 @@
 import patts
 
 from PyQt4.QtCore import QAbstractTableModel, Qt
-from PyQt4.QtGui import QApplication, QDialog, QGraphicsWidget, QStyle
-from PyQt4.QtGui import QStyleOptionButton, QTableView, QTableWidgetItem
-from PyQt4.QtGui import QVBoxLayout
+from PyQt4.QtGui import QApplication, QDialog, QGraphicsWidget, QHBoxLayout
+from PyQt4.QtGui import QPushButton, QStyle, QStyleOptionButton, QTableView
+from PyQt4.QtGui import QTableWidgetItem, QVBoxLayout
 from .lang import _
 
 class PattsTableModel(QAbstractTableModel):
@@ -38,7 +38,9 @@ class PattsTableModel(QAbstractTableModel):
         self._bool_fields = bool_fields
 
         self.init_rows(table_info)
-        self._orig = [row for row in self._rows]
+        self._orig = []
+        for row in self._rows:
+            self._orig.append([col for col in row])
 
     def init_rows(self, table_info):
         self._rows = []
@@ -104,6 +106,19 @@ class PattsTableModel(QAbstractTableModel):
 
             return self._keys[section]
 
+    def save_row_query(self, i):
+        pass
+
+    def save(self):
+        queries = []
+        for i in range(len(self._rows)):
+            query = self.save_row_query(i)
+            if query:
+                queries.append(query)
+
+        for query in queries:
+            print(query)
+
     @property
     def table(self):
         return self._table_name
@@ -118,13 +133,23 @@ class Editor(QDialog):
     def __init__(self, model):
         super().__init__()
 
-        self._view = QTableView()
-        self._view.setModel(model)
+        tableView = QTableView()
+        tableView.setModel(model)
+
+        okButton = QPushButton(_('OK'))
+        okButton.clicked.connect(self.accept)
+
+        buttonBox = QHBoxLayout()
+        buttonBox.addStretch(1)
+        buttonBox.addWidget(okButton)
 
         layout = QVBoxLayout()
-        layout.addWidget(self._view)
+        layout.addWidget(tableView)
+        layout.addLayout(buttonBox)
 
         self.setLayout(layout)
+
+        self.accepted.connect(model.save)
 
         self.setWindowTitle(_('Admin.edit' + model.table))
         self.resize(600, 300)
