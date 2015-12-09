@@ -188,7 +188,7 @@ class UserTableModel(PattsTableModel):
         super().__init__('User', patts.get_users, fields, parent)
 
     def primary_key_value(self, i):
-        return "'" + super().primary_key_value(i) + "'"
+        return patts.escape_string(super().primary_key_value(i), quote=True)
 
 class Editor(QDialog):
     def __init__(self, model):
