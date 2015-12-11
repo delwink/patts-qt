@@ -41,7 +41,7 @@ class Field:
     def quoted(self):
         return self.quoted
 
-    def value(self, val):
+    def format(self, val):
         if self._bool:
             return str(int(bool(val)))
 
@@ -134,7 +134,7 @@ class PattsTableModel(QAbstractTableModel):
 
     def add_change(self, changes, row, i):
         field = self._fields[i]
-        changes.append(field.name + '=' + field.value(row[i]))
+        changes.append(field.name + '=' + field.format(row[i]))
 
     def save_row_query(self, i):
         row = self._rows[i]
