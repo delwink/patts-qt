@@ -132,7 +132,7 @@ class PattsTableModel(QAbstractTableModel):
     def primary_key_value(self, i):
         return self._keys[i]
 
-    def add_change(self, changes, row, i):
+    def add_change(self, queries, changes, row, i):
         field = self._fields[i]
         changes.append(field.name + '=' + field.format(row[i]))
 
@@ -140,6 +140,7 @@ class PattsTableModel(QAbstractTableModel):
         row = self._rows[i]
         pkval = self.primary_key_value(i)
         changes = []
+        queries = []
 
         try:
             orig_row = self._orig[i]
@@ -148,7 +149,7 @@ class PattsTableModel(QAbstractTableModel):
 
         for j in range(len(row)):
             if not orig_row or row[j] != orig_row[j]:
-                self.add_change(changes, row, j)
+                self.add_change(queries, changes, row, j)
 
         if not changes:
             return None
@@ -156,8 +157,9 @@ class PattsTableModel(QAbstractTableModel):
         changes = ','.join(changes)
         query = 'UPDATE {} SET {} WHERE {}={}'.format(self.table, changes,
                                                       self.primary_key, pkval)
+        queries.append((patts.query, (query,)))
 
-        return ((patts.query, (query,)),)
+        return queries
 
     def save(self):
         queries = []
