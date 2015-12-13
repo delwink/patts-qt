@@ -157,14 +157,14 @@ class PattsTableModel(QAbstractTableModel):
         query = 'UPDATE {} SET {} WHERE {}={}'.format(self.table, changes,
                                                       self.primary_key, pkval)
 
-        return (patts.query, (query,))
+        return ((patts.query, (query,)),)
 
     def save(self):
         queries = []
         for i in range(len(self._rows)):
             query = self.save_row_query(i)
             if query:
-                queries.append(query)
+                queries += query
 
         for query in queries:
             # each item here is a tuple whose first element is a function and
