@@ -195,6 +195,16 @@ class UserTableModel(PattsTableModel):
     def primary_key_value(self, i):
         return patts.escape_string(super().primary_key_value(i), quote=True)
 
+    def add_change(self, queries, changes, row, i):
+        field = self._fields[i]
+
+        if field.name == 'state':
+            pass
+        elif field.name == 'isAdmin':
+            pass
+        else:
+            super().add_change(queries, changes, row, i)
+
 class Editor(QDialog):
     def __init__(self, model):
         super().__init__()
@@ -202,11 +212,15 @@ class Editor(QDialog):
         tableView = QTableView()
         tableView.setModel(model)
 
+        cancelButton = QPushButton(_('cancel'))
+        cancelButton.clicked.connect(self.reject)
+
         okButton = QPushButton(_('OK'))
         okButton.clicked.connect(self.accept)
 
         buttonBox = QHBoxLayout()
         buttonBox.addStretch(1)
+        buttonBox.addWidget(cancelButton)
         buttonBox.addWidget(okButton)
 
         layout = QVBoxLayout()

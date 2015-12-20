@@ -24,7 +24,7 @@ from .config import get, put
 
 class LoginWindow(QDialog):
     def __init__(self, message='', logInText='LoginWindow.logIn',
-                 cancelText='LoginWindow.cancel'):
+                 cancelText='cancel'):
         super().__init__()
 
         self._cancelled = False

@@ -1,6 +1,7 @@
 [en_US]
 lang = English (United States)
 
+cancel = Cancel
 no = No
 OK = OK
 yes = Yes
@@ -18,7 +19,6 @@ Help = Help
 Help.About = About
 
 LoginWindow.autoLogin = Remember Me
-LoginWindow.cancel = Cancel
 LoginWindow.database = Database Name
 LoginWindow.databaseToolTip = Name of the specific database on the server
 LoginWindow.logIn = Log in
