@@ -132,9 +132,9 @@ class PattsTableModel(QAbstractTableModel):
     def primary_key_value(self, i):
         return self._keys[i]
 
-    def add_change(self, queries, changes, row, i):
-        field = self._fields[i]
-        changes.append(field.name + '=' + field.format(row[i]))
+    def add_change(self, queries, changes, row, i, j):
+        field = self._fields[j]
+        changes.append(field.name + '=' + field.format(row[j]))
 
     def save_row_query(self, i):
         row = self._rows[i]
@@ -149,15 +149,14 @@ class PattsTableModel(QAbstractTableModel):
 
         for j in range(len(row)):
             if not orig_row or row[j] != orig_row[j]:
-                self.add_change(queries, changes, row, j)
+                self.add_change(queries, changes, row, i, j)
 
-        if not changes:
-            return None
-
-        changes = ','.join(changes)
-        query = 'UPDATE {} SET {} WHERE {}={}'.format(self.table, changes,
-                                                      self.primary_key, pkval)
-        queries.append((patts.query, (query,)))
+        if changes:
+            changes = ','.join(changes)
+            query = 'UPDATE {} SET {} WHERE {}={}'.format(self.table, changes,
+                                                          self.primary_key,
+                                                          pkval)
+            queries.append((patts.query, (query,)))
 
         return queries
 
@@ -195,15 +194,22 @@ class UserTableModel(PattsTableModel):
     def primary_key_value(self, i):
         return patts.escape_string(super().primary_key_value(i), quote=True)
 
-    def add_change(self, queries, changes, row, i):
-        field = self._fields[i]
+    def add_change(self, queries, changes, row, i, j):
+        field = self._fields[j]
 
         if field.name == 'state':
-            pass
+            queries.append((patts.delete_user, (self._keys[i],)))
         elif field.name == 'isAdmin':
-            pass
+            val = field.format(row[j])
+
+            if val == '0':
+                queries.append((patts.revoke_admin, (self._keys[i], '%')))
+            elif val == '1':
+                queries.append((patts.grant_admin, (self._keys[i], '%')))
+            else:
+                raise ValueError('Illegal boolean value')
         else:
-            super().add_change(queries, changes, row, i)
+            super().add_change(queries, changes, row, i, j)
 
 class Editor(QDialog):
     def __init__(self, model):
