@@ -39,7 +39,7 @@ class Field:
 
     @property
     def quoted(self):
-        return self.quoted
+        return self._quoted
 
     def format(self, val):
         if self._bool:
