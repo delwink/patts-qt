@@ -142,13 +142,9 @@ class PattsTableModel(QAbstractTableModel):
         changes = []
         queries = []
 
-        try:
-            orig_row = self._orig[i]
-        except IndexError:
-            orig_row = None
-
+        orig_row = self._orig[i]
         for j in range(len(row)):
-            if not orig_row or row[j] != orig_row[j]:
+            if row[j] != orig_row[j]:
                 self.add_change(queries, changes, row, i, j)
 
         if changes:
