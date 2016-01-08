@@ -129,11 +129,10 @@ class LoginWindow(QDialog):
 
     def get_info(self):
         self.exec_()
-
-        if not self._cancelled:
-            return (self._user, self._pass, self._server, self._db)
-        else:
+        if self._cancelled or not self._ready:
             return (None, None, None, None)
+
+        return (self._user, self._pass, self._server, self._db)
 
 def get_login(message=''):
     l = LoginWindow(message)
