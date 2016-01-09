@@ -1,6 +1,6 @@
 ##
 ##  patts-qt - Qt GUI client for PATTS
-##  Copyright (C) 2015 Delwink, LLC
+##  Copyright (C) 2015-2016 Delwink, LLC
 ##
 ##  This program is free software: you can redistribute it and/or modify
 ##  it under the terms of the GNU Affero General Public License as published by
@@ -128,6 +128,7 @@ class LoginWindow(QDialog):
         self.move(geom.topLeft())
 
     def get_info(self):
+        self._ready = False
         self.exec_()
         if self._cancelled or not self._ready:
             return (None, None, None, None)
