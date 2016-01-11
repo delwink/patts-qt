@@ -45,3 +45,7 @@ User.isAdmin = Admin Rights
 User.firstName = First Name
 User.middleName = Middle Name
 User.lastName = Last Name
+
+UserEditor.name = Username: 
+UserEditor.passwd = Password: 
+UserEditor.confirm = Confirm Password: 
