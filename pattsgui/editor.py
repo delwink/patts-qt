@@ -19,8 +19,9 @@ import patts
 
 from PyQt4.QtCore import QAbstractTableModel, Qt
 from PyQt4.QtGui import QApplication, QDialog, QGraphicsWidget, QHBoxLayout
-from PyQt4.QtGui import QPushButton, QStyle, QStyleOptionButton, QTableView
-from PyQt4.QtGui import QTableWidgetItem, QVBoxLayout
+from PyQt4.QtGui import QLabel, QLineEdit, QPushButton, QStyle
+from PyQt4.QtGui import QStyleOptionButton,QTableView, QTableWidgetItem
+from PyQt4.QtGui import QVBoxLayout
 from .lang import _
 
 class Field:
@@ -210,6 +211,17 @@ class UserTableModel(PattsTableModel):
 class NewUserDialog(QDialog):
     def __init__(self):
         super().__init__()
+
+        labelBox = QVBoxLayout()
+        labelBox.addWidget(QLabel(_('UserEditor.name')))
+        labelBox.addWidget(QLabel(_('UserEditor.passwd')))
+        labelBox.addWidget(QLabel(_('UserEditor.confirm')))
+
+        fieldBox = QVBoxLayout()
+
+        labelFieldBox = QHBoxLayout()
+        labelFieldBox.addLayout(labelBox)
+        labelFieldBox.addLayout(fieldBox)
 
 class Editor(QDialog):
     def __init__(self, model):
