@@ -48,4 +48,5 @@ User.lastName = Last Name
 
 UserEditor.name = Username: 
 UserEditor.passwd = Password: 
-UserEditor.confirm = Confirm Password: 
+UserEditor.confirm = Confirm Password:
+UserEditor.tryAgain = Password and confirmation do not match. Please try again.

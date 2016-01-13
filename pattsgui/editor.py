@@ -208,9 +208,25 @@ class UserTableModel(PattsTableModel):
         else:
             super().add_change(queries, changes, row, i, j)
 
+class TryAgainDialog(QDialog):
+    def __init__(self):
+        super().__init__()
+
+        layout = QVBoxLayout()
+        layout.addWidget(QLabel(_('UserEditor.tryAgain')))
+
+        okButton = QPushButton(_('OK'))
+        layout.addWidget(okButton)
+        okButton.clicked.connect(self.accept)
+
+        self.setLayout(layout)
+
 class NewUserDialog(QDialog):
     def __init__(self):
         super().__init__()
+
+        self._name = ''
+        self._passwd = ''
 
         labelBox = QVBoxLayout()
         labelBox.addWidget(QLabel(_('UserEditor.name')))
@@ -219,9 +235,27 @@ class NewUserDialog(QDialog):
 
         fieldBox = QVBoxLayout()
 
+        self._name_box = QLineEdit()
+        fieldBox.addWidget(self._name_box)
+
+        self._pw_box = QLineEdit()
+        fieldBox.addWidget(self._pw_box)
+
+        self._confirm_box = QLineEdit()
+        fieldBox.addWidget(self._confirm_box)
+
         labelFieldBox = QHBoxLayout()
         labelFieldBox.addLayout(labelBox)
         labelFieldBox.addLayout(fieldBox)
+
+    def get_info(self):
+        self.exec_()
+        while (not (self._name_box.text() and self._pw_box.text())
+               and self._pw_box.text() == self._confirm_box.text()):
+            TryAgainDialog.exec_()
+            self.exec_()
+
+        return (self._name_box.text(), self._pw_box.text())
 
 class Editor(QDialog):
     def __init__(self, model):
