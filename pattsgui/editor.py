@@ -248,6 +248,22 @@ class NewUserDialog(QDialog):
         labelFieldBox.addLayout(labelBox)
         labelFieldBox.addLayout(fieldBox)
 
+        okButton = QPushButton(_('OK'))
+        okButton.clicked.connect(self.accept)
+
+        cancelButton = QPushButton(_('cancel'))
+        cancelButton.clicked.connect(self.reject)
+
+        buttonBox = QHBoxLayout()
+        buttonBox.addStretch(1)
+        buttonBox.addWidget(cancelButton)
+        buttonBox.addWidget(okButton)
+
+        layout = QVBoxLayout()
+        layout.addLayout(labelFieldBox)
+        layout.addLayout(buttonBox)
+        self.setLayout(layout)
+
     def get_info(self):
         self.exec_()
         while (not (self._name_box.text() and self._pw_box.text())
