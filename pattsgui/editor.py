@@ -268,7 +268,7 @@ class NewUserDialog(QDialog):
         self.exec_()
         while (not (self._name_box.text() and self._pw_box.text())
                and self._pw_box.text() == self._confirm_box.text()):
-            TryAgainDialog.exec_()
+            TryAgainDialog().exec_()
             self.exec_()
 
         return (self._name_box.text(), self._pw_box.text())
