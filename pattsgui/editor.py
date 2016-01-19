@@ -213,7 +213,7 @@ class TryAgainDialog(QDialog):
         super().__init__()
 
         layout = QVBoxLayout()
-        layout.addWidget(QLabel(_('UserEditor.tryAgain')))
+        layout.addWidget(QLabel(_('NewUser.tryAgain')))
 
         okButton = QPushButton(_('OK'))
         layout.addWidget(okButton)
@@ -229,9 +229,9 @@ class NewUserDialog(QDialog):
         self._passwd = ''
 
         labelBox = QVBoxLayout()
-        labelBox.addWidget(QLabel(_('UserEditor.name')))
-        labelBox.addWidget(QLabel(_('UserEditor.passwd')))
-        labelBox.addWidget(QLabel(_('UserEditor.confirm')))
+        labelBox.addWidget(QLabel(_('NewUser.name')))
+        labelBox.addWidget(QLabel(_('NewUser.passwd')))
+        labelBox.addWidget(QLabel(_('NewUser.confirm')))
 
         fieldBox = QVBoxLayout()
 

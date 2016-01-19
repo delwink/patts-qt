@@ -46,7 +46,7 @@ User.firstName = First Name
 User.middleName = Middle Name
 User.lastName = Last Name
 
-UserEditor.name = Username: 
-UserEditor.passwd = Password: 
-UserEditor.confirm = Confirm Password:
-UserEditor.tryAgain = Password and confirmation do not match. Please try again.
+NewUser.name = Username: 
+NewUser.passwd = Password: 
+NewUser.confirm = Confirm Password:
+NewUser.tryAgain = Password and confirmation do not match. Please try again.
