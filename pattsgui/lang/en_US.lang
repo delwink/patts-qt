@@ -18,6 +18,12 @@ Exception.label = An error occurred:
 Help = Help
 Help.About = About
 
+Login.accessDenied = Access denied
+Login.badDatabase = Invalid database name
+Login.badHost = Invalid server address
+Login.badPass = Invalid password
+Login.badUser = Invalid username
+
 LoginWindow.autoLogin = Remember Me
 LoginWindow.database = Database Name
 LoginWindow.databaseToolTip = Name of the specific database on the server
@@ -30,13 +36,12 @@ LoginWindow.title = PATTS Database Login
 LoginWindow.user = Username
 LoginWindow.userToolTip = User as which to log into the database
 
-Login.accessDenied = Access denied
-Login.badDatabase = Invalid database name
-Login.badHost = Invalid server address
-Login.badPass = Invalid password
-Login.badUser = Invalid username
-
 MainWindow.title = PATTS - Server: {}, DB: {}, User: {}
+
+NewUser.name = Username: 
+NewUser.passwd = Password: 
+NewUser.confirm = Confirm Password:
+NewUser.tryAgain = Password and confirmation do not match. Please try again.
 
 Setup.want = The database was not found. Create a new PATTS database?
 
@@ -45,8 +50,3 @@ User.isAdmin = Admin Rights
 User.firstName = First Name
 User.middleName = Middle Name
 User.lastName = Last Name
-
-NewUser.name = Username: 
-NewUser.passwd = Password: 
-NewUser.confirm = Confirm Password:
-NewUser.tryAgain = Password and confirmation do not match. Please try again.
