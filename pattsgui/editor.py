@@ -248,11 +248,11 @@ class NewUserDialog(QDialog):
         labelFieldBox.addLayout(labelBox)
         labelFieldBox.addLayout(fieldBox)
 
-        okButton = QPushButton(_('OK'))
-        okButton.clicked.connect(self.accept)
-
         cancelButton = QPushButton(_('cancel'))
         cancelButton.clicked.connect(self.reject)
+
+        okButton = QPushButton(_('OK'))
+        okButton.clicked.connect(self.accept)
 
         buttonBox = QHBoxLayout()
         buttonBox.addStretch(1)
