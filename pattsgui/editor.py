@@ -123,6 +123,16 @@ class PattsTableModel(QAbstractTableModel):
             return self._set(index, value)
         return False
 
+    def insertRows(self, position, rows, parent):
+        self.beginInsertRows()
+        self.endInsertRows()
+        return True
+
+    def removeRows(self, position, rows, parent):
+        self.beginRemoveRows()
+        self.endRemoveRows()
+        return True
+
     def headerData(self, section, orientation, role):
         if role == Qt.DisplayRole:
             if orientation == Qt.Horizontal:
@@ -187,16 +197,6 @@ class UserTableModel(PattsTableModel):
             Field('lastName', quoted=True)
         )
         super().__init__('User', patts.get_users, fields, parent)
-
-    def insertRows(self, position, rows, parent):
-        self.beginInsertRows()
-        self.endInsertRows()
-        return True
-
-    def removeRows(self, position, rows, parent):
-        self.beginRemoveRows()
-        self.endRemoveRows()
-        return True
 
     def primary_key_value(self, i):
         return patts.escape_string(super().primary_key_value(i), quote=True)
