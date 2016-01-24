@@ -317,4 +317,4 @@ class Editor(QDialog):
         self.resize(600, 300)
 
     def add(self):
-        pass # stub for subclasses
+        raise NotImplementedError()
