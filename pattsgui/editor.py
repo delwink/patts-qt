@@ -296,7 +296,11 @@ class Editor(QDialog):
         okButton = QPushButton(_('OK'))
         okButton.clicked.connect(self.accept)
 
+        addButton = QPushButton('+')
+        addButton.clicked.connect(self.add)
+
         buttonBox = QHBoxLayout()
+        buttonBox.addWidget(addButton)
         buttonBox.addStretch(1)
         buttonBox.addWidget(cancelButton)
         buttonBox.addWidget(okButton)
@@ -311,3 +315,6 @@ class Editor(QDialog):
 
         self.setWindowTitle(_('Admin.edit' + model.table))
         self.resize(600, 300)
+
+    def add(self):
+        pass # stub for subclasses
