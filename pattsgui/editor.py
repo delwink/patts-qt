@@ -226,6 +226,7 @@ class TryAgainDialog(QDialog):
         okButton.clicked.connect(self.accept)
 
         self.setLayout(layout)
+        self.setWindowTitle(_('NewUser.tryAgainTitle'))
 
 class NewUserDialog(QDialog):
     def __init__(self):
@@ -271,6 +272,8 @@ class NewUserDialog(QDialog):
         layout.addLayout(labelFieldBox)
         layout.addLayout(buttonBox)
         self.setLayout(layout)
+
+        self.setWindowTitle(_('NewUser.title'))
 
     def get_info(self):
         self.exec_()

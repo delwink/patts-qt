@@ -41,7 +41,9 @@ MainWindow.title = PATTS - Server: {}, DB: {}, User: {}
 NewUser.name = Username: 
 NewUser.passwd = Password: 
 NewUser.confirm = Confirm Password:
-NewUser.tryAgain = Password and confirmation do not match. Please try again.
+NewUser.title = Create New User
+NewUser.tryAgain = Username is blank or password and confirmation do not match. Please try again.
+NewUser.tryAgainTitle = Try Again
 
 Setup.want = The database was not found. Create a new PATTS database?
 
