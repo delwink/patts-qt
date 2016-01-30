@@ -233,6 +233,7 @@ class NewUserDialog(QDialog):
 
         self._name = ''
         self._passwd = ''
+        self._cancelled = False
 
         labelBox = QVBoxLayout()
         labelBox.addWidget(QLabel(_('NewUser.name')))
@@ -256,6 +257,7 @@ class NewUserDialog(QDialog):
 
         cancelButton = QPushButton(_('cancel'))
         cancelButton.clicked.connect(self.reject)
+        self.rejected.connect(self._set_cancelled)
 
         okButton = QPushButton(_('OK'))
         okButton.clicked.connect(self.accept)
@@ -272,12 +274,16 @@ class NewUserDialog(QDialog):
 
     def get_info(self):
         self.exec_()
-        while (not (self._name_box.text() and self._pw_box.text())
-               and self._pw_box.text() == self._confirm_box.text()):
+        while (not self._cancelled
+               and (not (self._name_box.text() and self._pw_box.text())
+                    or self._pw_box.text() != self._confirm_box.text())):
             TryAgainDialog().exec_()
             self.exec_()
 
         return (self._name_box.text(), self._pw_box.text())
+
+    def _set_cancelled(self):
+        self._cancelled = True
 
 class Editor(QDialog):
     def __init__(self, model):
@@ -314,3 +320,10 @@ class Editor(QDialog):
 
     def add(self):
         raise NotImplementedError()
+
+class UserEditor(Editor):
+    def __init__(self):
+        super().__init__(UserTableModel())
+
+    def add(self):
+        name, passwd = NewUserDialog().get_info()

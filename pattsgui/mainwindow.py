@@ -1,6 +1,6 @@
 ##
 ##  patts-qt - Qt GUI client for PATTS
-##  Copyright (C) 2015 Delwink, LLC
+##  Copyright (C) 2015-2016 Delwink, LLC
 ##
 ##  This program is free software: you can redistribute it and/or modify
 ##  it under the terms of the GNU Affero General Public License as published by
@@ -21,7 +21,7 @@ from PyQt4.QtGui import QAction, QMainWindow
 from PyQt4.QtCore import QObject, Qt, SIGNAL
 from .aboutdialog import AboutDialog
 from .config import get, put
-from .editor import Editor, UserTableModel
+from .editor import UserEditor, UserTableModel
 from .hostname import split_host
 from .lang import _
 from .exception import ExceptionDialog, format_exc
@@ -75,6 +75,6 @@ class MainWindow(QMainWindow):
 
     def _show_users(self):
         try:
-            Editor(UserTableModel()).exec_()
+            UserEditor().exec_()
         except Exception as e:
             ExceptionDialog(format_exc()).exec_()
