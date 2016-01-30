@@ -247,9 +247,11 @@ class NewUserDialog(QDialog):
         fieldBox.addWidget(self._name_box)
 
         self._pw_box = QLineEdit()
+        self._pw_box.setEchoMode(QLineEdit.Password)
         fieldBox.addWidget(self._pw_box)
 
         self._confirm_box = QLineEdit()
+        self._confirm_box.setEchoMode(QLineEdit.Password)
         fieldBox.addWidget(self._confirm_box)
 
         labelFieldBox = QHBoxLayout()
@@ -261,6 +263,7 @@ class NewUserDialog(QDialog):
         self.rejected.connect(self._set_cancelled)
 
         okButton = QPushButton(_('OK'))
+        okButton.setDefault(True)
         okButton.clicked.connect(self.accept)
 
         buttonBox = QHBoxLayout()
