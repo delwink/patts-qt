@@ -124,14 +124,10 @@ class PattsTableModel(QAbstractTableModel):
         return False
 
     def insertRows(self, position, rows, parent):
-        self.beginInsertRows()
-        self.endInsertRows()
-        return True
+        return False
 
     def removeRows(self, position, rows, parent):
-        self.beginRemoveRows()
-        self.endRemoveRows()
-        return True
+        return False
 
     def headerData(self, section, orientation, role):
         if role == Qt.DisplayRole:
