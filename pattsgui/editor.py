@@ -17,11 +17,12 @@
 
 import patts
 
-from PyQt4.QtCore import QAbstractTableModel, Qt
+from PyQt4.QtCore import QAbstractTableModel, QModelIndex, Qt
 from PyQt4.QtGui import QApplication, QDialog, QGraphicsWidget, QHBoxLayout
 from PyQt4.QtGui import QLabel, QLineEdit, QPushButton, QStyle
 from PyQt4.QtGui import QStyleOptionButton,QTableView, QTableWidgetItem
 from PyQt4.QtGui import QValidator, QVBoxLayout
+from .exception import ExceptionDialog, format_exc
 from .lang import _
 
 class Field:
@@ -201,7 +202,8 @@ class UserTableModel(PattsTableModel):
         field = self._fields[j]
 
         if field.name == 'state':
-            queries.append((patts.delete_user, (self._keys[i],)))
+            if not row[j]:
+                queries.append((patts.delete_user, (self._keys[i],)))
         elif field.name == 'isAdmin':
             val = field.format(row[j])
 
@@ -316,8 +318,8 @@ class Editor(QDialog):
     def __init__(self, model):
         super().__init__()
 
-        tableView = QTableView()
-        tableView.setModel(model)
+        self._view = QTableView()
+        self._view.setModel(model)
 
         cancelButton = QPushButton(_('cancel'))
         cancelButton.clicked.connect(self.reject)
@@ -335,15 +337,18 @@ class Editor(QDialog):
         buttonBox.addWidget(okButton)
 
         layout = QVBoxLayout()
-        layout.addWidget(tableView)
+        layout.addWidget(self._view)
         layout.addLayout(buttonBox)
 
         self.setLayout(layout)
 
-        self.accepted.connect(model.save)
+        self.accepted.connect(self.save)
 
         self.setWindowTitle(_('Admin.edit' + model.table))
         self.resize(600, 300)
+
+    def save(self):
+        self._view.model().save()
 
     def add(self):
         raise NotImplementedError()
@@ -353,4 +358,10 @@ class UserEditor(Editor):
         super().__init__(UserTableModel())
 
     def add(self):
-        name, passwd = NewUserDialog().get_info()
+        try:
+            name, passwd = NewUserDialog().get_info()
+            patts.create_user(name, '%', passwd)
+
+            self._view.setModel(UserTableModel())
+        except Exception as e:
+            ExceptionDialog(format_exc()).exec_()
