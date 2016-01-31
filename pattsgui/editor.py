@@ -21,7 +21,7 @@ from PyQt4.QtCore import QAbstractTableModel, Qt
 from PyQt4.QtGui import QApplication, QDialog, QGraphicsWidget, QHBoxLayout
 from PyQt4.QtGui import QLabel, QLineEdit, QPushButton, QStyle
 from PyQt4.QtGui import QStyleOptionButton,QTableView, QTableWidgetItem
-from PyQt4.QtGui import QVBoxLayout
+from PyQt4.QtGui import QValidator, QVBoxLayout
 from .lang import _
 
 class Field:
@@ -228,6 +228,26 @@ class TryAgainDialog(QDialog):
         self.setLayout(layout)
         self.setWindowTitle(_('NewUser.tryAgainTitle'))
 
+class UsernameValidator(QValidator):
+    def __init__(self):
+        super().__init__()
+
+    def validate(self, input, pos):
+        if len(input) > 8:
+            return (QValidator.Invalid, input, pos - 1)
+
+        out = ''
+        for c in input:
+            if c in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ':
+                c = c.lower()
+
+            if c not in 'abcdefghijklmnopqrstuvwxyz0123456789':
+                return (QValidator.Invalid, input, pos - 1)
+
+            out += c
+
+        return (QValidator.Acceptable, out, pos)
+
 class NewUserDialog(QDialog):
     def __init__(self):
         super().__init__()
@@ -244,6 +264,7 @@ class NewUserDialog(QDialog):
         fieldBox = QVBoxLayout()
 
         self._name_box = QLineEdit()
+        self._name_box.setValidator(UsernameValidator())
         fieldBox.addWidget(self._name_box)
 
         self._pw_box = QLineEdit()
