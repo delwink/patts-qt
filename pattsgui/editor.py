@@ -386,6 +386,9 @@ class ParentTaskValidator(QValidator):
         self._nr = get_num_rows
 
     def validate(self, input, pos):
+        if len(input) == 0:
+            return (QValidator.Intermediate, input, pos)
+
         try:
             n = int(input)
 
@@ -421,4 +424,7 @@ class TaskTypeEditor(Editor):
         model = TaskTypeTableModel()
         super().__init__(model)
         self._view.setItemDelegate(TaskTypeItemDelegate(model.parent_column,
-                                                        model.rowCount))
+                                                        self._row_count))
+
+    def _row_count(self):
+        return self._view.model().rowCount()
