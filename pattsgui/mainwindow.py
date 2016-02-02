@@ -21,7 +21,7 @@ from PyQt4.QtGui import QAction, QMainWindow
 from PyQt4.QtCore import QObject, Qt, SIGNAL
 from .aboutdialog import AboutDialog
 from .config import get, put
-from .editor import UserEditor, UserTableModel
+from .editor import TaskTypeEditor, UserEditor
 from .hostname import split_host
 from .lang import _
 from .exception import ExceptionDialog, format_exc
@@ -42,6 +42,11 @@ class MainWindow(QMainWindow):
 
         if patts.have_admin():
             adminMenu = menuBar.addMenu(_('Admin'))
+
+            tasksAction = QAction(_('Admin.TaskTypes'), self)
+            tasksAction.triggered.connect(self._show_tasks)
+            adminMenu.addAction(tasksAction)
+
             usersAction = QAction(_('Admin.Users'), self)
             usersAction.triggered.connect(self._show_users)
             adminMenu.addAction(usersAction)
@@ -76,5 +81,11 @@ class MainWindow(QMainWindow):
     def _show_users(self):
         try:
             UserEditor().exec_()
+        except Exception as e:
+            ExceptionDialog(format_exc()).exec_()
+
+    def _show_tasks(self):
+        try:
+            TaskTypeEditor().exec_()
         except Exception as e:
             ExceptionDialog(format_exc()).exec_()

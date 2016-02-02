@@ -20,8 +20,8 @@ import patts
 from PyQt4.QtCore import QAbstractTableModel, QModelIndex, Qt
 from PyQt4.QtGui import QApplication, QDialog, QGraphicsWidget, QHBoxLayout
 from PyQt4.QtGui import QLabel, QLineEdit, QPushButton, QStyle
-from PyQt4.QtGui import QStyleOptionButton,QTableView, QTableWidgetItem
-from PyQt4.QtGui import QValidator, QVBoxLayout
+from PyQt4.QtGui import QStyledItemDelegate, QStyleOptionButton, QTableView
+from PyQt4.QtGui import QTableWidgetItem, QValidator, QVBoxLayout
 from .exception import ExceptionDialog, format_exc
 from .lang import _
 
@@ -74,10 +74,10 @@ class PattsTableModel(QAbstractTableModel):
             field_data = [row[field.name] for field in self._fields]
             self._rows.append(field_data)
 
-    def rowCount(self, parent):
+    def rowCount(self, parent=None):
         return len(self._rows)
 
-    def columnCount(self, parent):
+    def columnCount(self, parent=None):
         return len(self._fields)
 
     def flags(self, index):
@@ -215,6 +215,19 @@ class UserTableModel(PattsTableModel):
                 raise ValueError('Illegal boolean value')
         else:
             super().add_change(queries, changes, row, i, j)
+
+class TaskTypeTableModel(PattsTableModel):
+    def __init__(self, parent=None):
+        fields = (
+            Field('state', boolean=True),
+            Field('parentID'),
+            Field('displayName', quoted=True)
+        )
+        super().__init__('TaskType', patts.get_types, fields, parent)
+
+    @property
+    def parent_column(self):
+        return 1
 
 class TryAgainDialog(QDialog):
     def __init__(self):
@@ -365,3 +378,47 @@ class UserEditor(Editor):
             self._view.setModel(UserTableModel())
         except Exception as e:
             ExceptionDialog(format_exc()).exec_()
+
+class ParentTaskValidator(QValidator):
+    def __init__(self, row, get_num_rows):
+        super().__init__()
+        self._id = row + 1
+        self._nr = get_num_rows
+
+    def validate(self, input, pos):
+        try:
+            n = int(input)
+
+            if n < 0 or n > self._nr():
+                return (QValidator.Invalid, input, pos - 1)
+
+            if n == self._id:
+                return (QValidator.Intermediate, input, pos)
+
+            return (QValidator.Acceptable, input, pos)
+        except ValueError:
+            return (QValidator.Invalid, input, pos - 1)
+
+class TaskTypeItemDelegate(QStyledItemDelegate):
+    def __init__(self, parent_column, get_num_rows):
+        super().__init__()
+        self._pc = parent_column
+        self._nr = get_num_rows
+
+    def createEditor(self, widget, option, index):
+        if not index.isValid():
+            return 0
+
+        if index.column() == self._pc:
+            editor = QLineEdit(widget)
+            editor.setValidator(ParentTaskValidator(index.row(), self._nr))
+            return editor
+
+        return super().createEditor(widget, option, index)
+
+class TaskTypeEditor(Editor):
+    def __init__(self):
+        model = TaskTypeTableModel()
+        super().__init__(model)
+        self._view.setItemDelegate(TaskTypeItemDelegate(model.parent_column,
+                                                        model.rowCount))
