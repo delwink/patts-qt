@@ -435,8 +435,7 @@ class TaskTypeEditor(Editor):
 
     def add(self):
         try:
-            patts.query('INSERT INTO TaskType(state,parentID,displayName) '
-                        "VALUES(1,0,'')")
+            patts.create_task('0', '')
             self._view.setModel(TaskTypeTableModel())
         except Exception as e:
             ExceptionDialog(format_exc()).exec_()
