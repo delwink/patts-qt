@@ -433,5 +433,13 @@ class TaskTypeEditor(Editor):
         self._view.setItemDelegate(TaskTypeItemDelegate(model.parent_column,
                                                         self._row_count))
 
+    def add(self):
+        try:
+            patts.query('INSERT INTO TaskType(state,parentID,displayName) '
+                        "VALUES(1,0,'')")
+            self._view.setModel(TaskTypeTableModel())
+        except Exception as e:
+            ExceptionDialog(format_exc()).exec_()
+
     def _row_count(self):
         return self._view.model().rowCount()
