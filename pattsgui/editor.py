@@ -327,6 +327,10 @@ class NewUserDialog(QDialog):
     def _set_cancelled(self):
         self._cancelled = True
 
+    @property
+    def cancelled(self):
+        return self._cancelled
+
 class Editor(QDialog):
     def __init__(self, model):
         super().__init__()
@@ -372,10 +376,12 @@ class UserEditor(Editor):
 
     def add(self):
         try:
-            name, passwd = NewUserDialog().get_info()
-            patts.create_user(name, '%', passwd)
+            dialog = NewUserDialog()
+            name, passwd = dialog.get_info()
 
-            self._view.setModel(UserTableModel())
+            if not dialog.cancelled:
+                patts.create_user(name, '%', passwd)
+                self._view.setModel(UserTableModel())
         except Exception as e:
             ExceptionDialog(format_exc()).exec_()
 
