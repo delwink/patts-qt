@@ -342,6 +342,7 @@ class Editor(QDialog):
         cancelButton.clicked.connect(self.reject)
 
         okButton = QPushButton(_('OK'))
+        okButton.setDefault(True)
         okButton.clicked.connect(self.accept)
 
         addButton = QPushButton('+')
