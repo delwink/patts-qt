@@ -26,9 +26,6 @@ from .hostname import split_host
 from .lang import _
 from .exception import ExceptionDialog, format_exc
 
-def new_user():
-    pass
-
 class MainWindow(QMainWindow):
     def __init__(self, user, passwd, host, database):
         srv, port = split_host(host)
