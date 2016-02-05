@@ -47,6 +47,10 @@ NewUser.title = Create New User
 NewUser.tryAgain = Username is blank or password and confirmation do not match. Please try again.
 NewUser.tryAgainTitle = Try Again
 
+Session = &Session
+Session.LogOut = Log out
+Session.Quit = Quit
+
 Setup.want = The database was not found. Create a new PATTS database?
 
 TaskType.state = Active

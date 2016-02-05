@@ -17,7 +17,7 @@
 
 import patts
 
-from PyQt4.QtGui import QAction, QMainWindow
+from PyQt4.QtGui import QAction, QIcon, QKeySequence, QMainWindow
 from PyQt4.QtCore import QObject, Qt, SIGNAL
 from .aboutdialog import AboutDialog
 from .config import get, put
@@ -37,6 +37,18 @@ class MainWindow(QMainWindow):
 
         menuBar = self.menuBar()
 
+        sessionMenu = menuBar.addMenu(_('Session'))
+
+        logoutAction = QAction(_('Session.LogOut'), self)
+        logoutAction.triggered.connect(self._log_out)
+        sessionMenu.addAction(logoutAction)
+
+        quitAction = QAction(_('Session.Quit'), self)
+        quitAction.setIcon(QIcon.fromTheme('application-exit'))
+        quitAction.setShortcut(QKeySequence.Quit)
+        quitAction.triggered.connect(self.close)
+        sessionMenu.addAction(quitAction)
+
         if patts.have_admin():
             adminMenu = menuBar.addMenu(_('Admin'))
 
@@ -50,6 +62,7 @@ class MainWindow(QMainWindow):
 
         helpMenu = menuBar.addMenu(_('Help'))
         aboutAction = QAction(_('Help.About'), self)
+        aboutAction.setIcon(QIcon.fromTheme('help-about'))
         aboutAction.triggered.connect(self._show_about)
         helpMenu.addAction(aboutAction)
 
@@ -63,6 +76,11 @@ class MainWindow(QMainWindow):
         self._save_dims()
         patts.cleanup()
         super().closeEvent(event)
+
+    def _log_out(self):
+        put('Login', 'autologin', 'false')
+        put('Login', 'passwd', '')
+        self.close()
 
     def _save_dims(self):
         if self.windowState() & Qt.WindowMaximized:
