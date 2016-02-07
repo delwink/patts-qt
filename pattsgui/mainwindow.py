@@ -17,8 +17,8 @@
 
 import patts
 
-from PyQt4.QtGui import QAction, QIcon, QKeySequence, QMainWindow
 from PyQt4.QtCore import QObject, Qt, SIGNAL
+from PyQt4.QtGui import QAction, QIcon, QKeySequence, QMainWindow
 from .aboutdialog import AboutDialog
 from .config import get, put
 from .editor import TaskTypeEditor, UserEditor
