@@ -117,14 +117,21 @@ class CurrentTaskView(QTableView):
         self._triggers.append(f)
 
     def _clock_in(self):
-        patts.clockin(self._task_map[self._select_box.currentIndex()])
-        for trigger in self._triggers:
-            trigger()
+        try:
+            patts.clockin(self._task_map[self._select_box.currentIndex()])
+            for trigger in self._triggers:
+                trigger()
+        except Exception as e:
+            if not (type(e) is KeyError and str(e) == '-1'):
+                ExceptionDialog(format_exc()).exec_()
 
     def _clock_out(self):
-        patts.clockout(list(patts.get_active_task().keys())[0])
-        for trigger in self._triggers:
-            trigger()
+        try:
+            patts.clockout(list(patts.get_active_task().keys())[0])
+            for trigger in self._triggers:
+                trigger()
+        except:
+            ExceptionDialog(format_exc()).exec_()
 
 class MainWindow(QMainWindow):
     def __init__(self, user, passwd, host, database):
