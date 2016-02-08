@@ -53,6 +53,11 @@ Session.Quit = Quit
 
 Setup.want = The database was not found. Create a new PATTS database?
 
+TaskTable.clockIn = Clock in
+TaskTable.clockOut = Clock out
+TaskTable.startTime = Started
+TaskTable.typeID = Task
+
 TaskType.state = Active
 TaskType.parentID = Parent ID
 TaskType.displayName = Display Name

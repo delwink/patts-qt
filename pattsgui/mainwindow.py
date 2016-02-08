@@ -17,14 +17,113 @@
 
 import patts
 
-from PyQt4.QtCore import QObject, Qt, SIGNAL
-from PyQt4.QtGui import QAction, QIcon, QKeySequence, QMainWindow
+from PyQt4.QtCore import QAbstractTableModel, QObject, Qt, SIGNAL
+from PyQt4.QtGui import QAction, QComboBox, QIcon, QKeySequence, QMainWindow
+from PyQt4.QtGui import QPushButton, QStyledItemDelegate, QTableView
+from PyQt4.QtGui import QVBoxLayout
 from .aboutdialog import AboutDialog
 from .config import get, put
 from .editor import TaskTypeEditor, UserEditor
 from .hostname import split_host
 from .lang import _
 from .exception import ExceptionDialog, format_exc
+
+class CurrentTaskModel(QAbstractTableModel):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+
+        self._rows = [('', None, None)]
+
+        tree = patts.get_tree()
+
+        keys = list(tree.keys())
+        keys.sort()
+        for key in keys:
+            item = tree[key]
+            self._rows.insert(1, (key, item['typeID'], item['startTime']))
+
+    def rowCount(self, parent=None):
+        return len(self._rows)
+
+    def columnCount(self, parent=None):
+        return len(self._rows[0])
+
+    def flags(self, index):
+        flags = Qt.ItemIsEnabled
+        if (index.row() == 1 and index.column() == 2) or index.row() == 0:
+            flags |= Qt.ItemIsEditable
+
+        return flags
+
+    def data(self, index, role):
+        if role in (Qt.DisplayRole, Qt.EditRole) and index.row() > 0:
+            if index.column() == 0:
+                type = patts.get_type_byid(self._rows[index.row()][1])
+                return type['displayName']
+            elif index.column() == 1:
+                return self._rows[index.row()][2]
+            else:
+                return None
+
+    def headerData(self, section, orientation, role):
+        if role == Qt.DisplayRole:
+            if orientation == Qt.Horizontal:
+                if section == 0:
+                    return _('TaskTable.typeID')
+                elif section == 1:
+                    return _('TaskTable.startTime')
+                else:
+                    return None
+
+            return self._rows[section][0]
+
+class CurrentTaskView(QTableView):
+    def __init__(self):
+        super().__init__()
+        self._triggers = []
+
+    def setModel(self, model):
+        super().setModel(model)
+
+        current_task = patts.get_active_task()
+        if current_task:
+            parent_id = current_task[list(current_task.keys())[0]]['typeID']
+        else:
+            parent_id = '0'
+
+        child_tasks = patts.get_child_types(parent_id)
+        self._select_box = QComboBox()
+
+        i = 0
+        self._task_map = {}
+        for task in child_tasks:
+            self._select_box.addItem(child_tasks[task]['displayName'])
+            self._task_map[i] = task
+            i += 1
+
+        self.setIndexWidget(model.createIndex(0, 0), self._select_box)
+
+        clockInButton = QPushButton(_('TaskTable.clockIn'))
+        clockInButton.clicked.connect(self._clock_in)
+        self.setIndexWidget(model.createIndex(0, 1), clockInButton)
+
+        if parent_id != '0':
+            clockOutButton = QPushButton(_('TaskTable.clockOut'))
+            clockOutButton.clicked.connect(self._clock_out)
+            self.setIndexWidget(model.createIndex(1, 2), clockOutButton)
+
+    def add_trigger(self, f):
+        self._triggers.append(f)
+
+    def _clock_in(self):
+        patts.clockin(self._task_map[self._select_box.currentIndex()])
+        for trigger in self._triggers:
+            trigger()
+
+    def _clock_out(self):
+        patts.clockout(list(patts.get_active_task().keys())[0])
+        for trigger in self._triggers:
+            trigger()
 
 class MainWindow(QMainWindow):
     def __init__(self, user, passwd, host, database):
@@ -66,6 +165,11 @@ class MainWindow(QMainWindow):
         aboutAction.triggered.connect(self._show_about)
         helpMenu.addAction(aboutAction)
 
+        self._view = CurrentTaskView()
+        self._view.setModel(CurrentTaskModel())
+        self._view.add_trigger(self._load_tree)
+        self.setCentralWidget(self._view)
+
         self.resize(int(get('MainWindow', 'width')),
                     int(get('MainWindow', 'height')))
         if get('MainWindow', 'max').lower() == 'true':
@@ -104,3 +208,6 @@ class MainWindow(QMainWindow):
             TaskTypeEditor().exec_()
         except Exception as e:
             ExceptionDialog(format_exc()).exec_()
+
+    def _load_tree(self):
+        self._view.setModel(CurrentTaskModel())
