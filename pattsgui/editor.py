@@ -364,6 +364,7 @@ class Editor(QDialog):
 
         self.setWindowTitle(_('Admin.edit' + model.table))
         self.resize(600, 300)
+        self._view.resizeColumnsToContents()
 
     def save(self):
         self._view.model().save()
@@ -383,6 +384,7 @@ class UserEditor(Editor):
             if not dialog.cancelled:
                 patts.create_user(name, '%', passwd)
                 self._view.setModel(UserTableModel())
+                self._view.resizeColumnsToContents()
         except Exception as e:
             ExceptionDialog(format_exc()).exec_()
 
@@ -437,6 +439,7 @@ class TaskTypeEditor(Editor):
         try:
             patts.create_task('0', '')
             self._view.setModel(TaskTypeTableModel())
+            self._view.resizeColumnsToContents()
         except Exception as e:
             ExceptionDialog(format_exc()).exec_()
 

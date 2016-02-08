@@ -111,6 +111,8 @@ class CurrentTaskView(QTableView):
             clockOutButton.clicked.connect(self._clock_out)
             self.setIndexWidget(model.createIndex(1, 2), clockOutButton)
 
+        self.resizeColumnsToContents()
+
     def add_trigger(self, f):
         self._triggers.append(f)
 
