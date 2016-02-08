@@ -19,8 +19,7 @@ import patts
 
 from PyQt4.QtCore import QAbstractTableModel, QObject, Qt, SIGNAL
 from PyQt4.QtGui import QAction, QComboBox, QIcon, QKeySequence, QMainWindow
-from PyQt4.QtGui import QPushButton, QStyledItemDelegate, QTableView
-from PyQt4.QtGui import QVBoxLayout
+from PyQt4.QtGui import QPushButton, QTableView
 from .aboutdialog import AboutDialog
 from .config import get, put
 from .editor import TaskTypeEditor, UserEditor
