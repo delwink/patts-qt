@@ -38,8 +38,8 @@ DEFAULTS = {
     },
 
     'MainWindow': {
-        'width': '800',
-        'height': '600',
+        'width': '450',
+        'height': '500',
         'max': 'false'
     }
 }
