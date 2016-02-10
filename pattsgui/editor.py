@@ -435,6 +435,11 @@ class TaskTypeEditor(Editor):
         self._view.setItemDelegate(TaskTypeItemDelegate(model.parent_column,
                                                         self._row_count))
 
+        keys = [int(k) for k in self._keys]
+        keys.sort()
+        for i in range(len(keys)):
+            self._keys[i] = keys[i]
+
     def add(self):
         try:
             patts.create_task('0', '')
