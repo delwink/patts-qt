@@ -225,10 +225,13 @@ class TaskTypeTableModel(PattsTableModel):
         )
         super().__init__('TaskType', patts.get_types, fields, parent)
 
+    def init_rows(self, table_info):
         keys = [int(k) for k in self._keys]
         keys.sort()
         for i in range(len(keys)):
-            self._keys[i] = keys[i]
+            self._keys[i] = str(keys[i])
+
+        super().init_rows(table_info)
 
     @property
     def parent_column(self):
