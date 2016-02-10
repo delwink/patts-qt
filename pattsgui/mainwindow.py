@@ -38,9 +38,9 @@ class CurrentTaskModel(QAbstractTableModel):
 
         keys = list(tree.keys())
         keys.sort()
-        for key in keys:
-            item = tree[key]
-            self._rows.insert(1, (key, item['typeID'], item['startTime']))
+        for i in range(len(keys)):
+            item = tree[keys[i]]
+            self._rows.insert(1, (keys[i], item['typeID'], item['startTime']))
 
     def rowCount(self, parent=None):
         return len(self._rows)
