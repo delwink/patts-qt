@@ -19,7 +19,7 @@ import patts
 
 from PyQt4.QtCore import QAbstractTableModel, QObject, Qt, SIGNAL
 from PyQt4.QtGui import QAction, QComboBox, QIcon, QKeySequence, QMainWindow
-from PyQt4.QtGui import QPushButton, QTableView
+from PyQt4.QtGui import QPushButton, QTableView, QVBoxLayout, QWidget
 from .aboutdialog import AboutDialog
 from .config import get, put
 from .editor import TaskTypeEditor, UserEditor
@@ -134,6 +134,27 @@ class CurrentTaskView(QTableView):
         except:
             ExceptionDialog(format_exc()).exec_()
 
+class MainWindowCentralWidget(QWidget):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+
+        layout = QVBoxLayout()
+
+        self._view = CurrentTaskView()
+        self._view.setModel(CurrentTaskModel())
+        self._view.add_trigger(self._load_tree)
+        layout.addWidget(self._view)
+
+        refreshButton = QPushButton(_('MainWindow.refresh'))
+        refreshButton.setShortcut(QKeySequence.Refresh)
+        refreshButton.clicked.connect(self._load_tree)
+        layout.addWidget(refreshButton)
+
+        self.setLayout(layout)
+
+    def _load_tree(self):
+        self._view.setModel(CurrentTaskModel())
+
 class MainWindow(QMainWindow):
     def __init__(self, user, passwd, host, database):
         srv, port = split_host(host)
@@ -180,10 +201,7 @@ class MainWindow(QMainWindow):
         aboutAction.triggered.connect(self._show_about)
         helpMenu.addAction(aboutAction)
 
-        self._view = CurrentTaskView()
-        self._view.setModel(CurrentTaskModel())
-        self._view.add_trigger(self._load_tree)
-        self.setCentralWidget(self._view)
+        self.setCentralWidget(MainWindowCentralWidget())
 
         self.resize(int(get('MainWindow', 'width')),
                     int(get('MainWindow', 'height')))
@@ -223,9 +241,6 @@ class MainWindow(QMainWindow):
             TaskTypeEditor(self).exec_()
         except Exception as e:
             ExceptionDialog(format_exc()).exec_()
-
-    def _load_tree(self):
-        self._view.setModel(CurrentTaskModel())
 
     def _user_summary_report(self):
         UserSummaryReportDialog(self).exec_()

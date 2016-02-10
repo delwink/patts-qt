@@ -56,6 +56,7 @@ LoginWindow.title = PATTS Database Login
 LoginWindow.user = Username
 LoginWindow.userToolTip = User as which to log into the database
 
+MainWindow.refresh = Refresh
 MainWindow.title = PATTS - Server: {}, DB: {}, User: {}
 
 NewUser.name = Username: 
