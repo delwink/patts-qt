@@ -332,8 +332,8 @@ class NewUserDialog(QDialog):
         return self._cancelled
 
 class Editor(QDialog):
-    def __init__(self, model):
-        super().__init__()
+    def __init__(self, model, parent=None):
+        super().__init__(parent)
 
         self._view = QTableView()
         self._view.setModel(model)
@@ -373,8 +373,8 @@ class Editor(QDialog):
         raise NotImplementedError()
 
 class UserEditor(Editor):
-    def __init__(self):
-        super().__init__(UserTableModel())
+    def __init__(self, parent=None):
+        super().__init__(UserTableModel(), parent)
 
     def add(self):
         try:
@@ -429,9 +429,9 @@ class TaskTypeItemDelegate(QStyledItemDelegate):
         return super().createEditor(widget, option, index)
 
 class TaskTypeEditor(Editor):
-    def __init__(self):
+    def __init__(self, parent=None):
         model = TaskTypeTableModel()
-        super().__init__(model)
+        super().__init__(model, parent)
         self._view.setItemDelegate(TaskTypeItemDelegate(model.parent_column,
                                                         self._row_count))
 
