@@ -111,6 +111,7 @@ class UserSummaryReportDialog(QDialog):
 
         runButton = QPushButton(_('Reports.run'))
         runButton.clicked.connect(self.accept)
+        runButton.setDefault(True)
 
         buttonBox = QHBoxLayout()
         buttonBox.addStretch(1)
