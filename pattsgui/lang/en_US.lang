@@ -19,6 +19,7 @@
 lang = English (United States)
 
 cancel = Cancel
+close = Close
 no = No
 OK = OK
 yes = Yes
@@ -65,7 +66,13 @@ NewUser.tryAgain = Username is blank or password and confirmation do not match. 
 NewUser.tryAgainTitle = Try Again
 
 Reports = &Reports
-Reports.self = My Time Summary
+Reports.endDate = To: 
+Reports.startDate = From: 
+Reports.summaryFor = Time Summary for {}
+Reports.summaryResults = Time Summary Results
+Reports.timeSpentFormat = {}h {}m
+Reports.userSummary = User Time Summary
+Reports.run = Run
 
 Session = &Session
 Session.LogOut = Log out

@@ -26,6 +26,7 @@ from .editor import TaskTypeEditor, UserEditor
 from .hostname import split_host
 from .lang import _
 from .exception import ExceptionDialog, format_exc
+from .report import UserSummaryReportDialog
 
 class CurrentTaskModel(QAbstractTableModel):
     def __init__(self, parent=None):
@@ -156,6 +157,12 @@ class MainWindow(QMainWindow):
         quitAction.triggered.connect(self.close)
         sessionMenu.addAction(quitAction)
 
+        reportsMenu = menuBar.addMenu(_('Reports'))
+
+        userReportAction = QAction(_('Reports.userSummary'), self)
+        userReportAction.triggered.connect(self._user_summary_report)
+        reportsMenu.addAction(userReportAction)
+
         if patts.have_admin():
             adminMenu = menuBar.addMenu(_('Admin'))
 
@@ -207,15 +214,18 @@ class MainWindow(QMainWindow):
 
     def _show_users(self):
         try:
-            UserEditor().exec_()
+            UserEditor(self).exec_()
         except Exception as e:
             ExceptionDialog(format_exc()).exec_()
 
     def _show_tasks(self):
         try:
-            TaskTypeEditor().exec_()
+            TaskTypeEditor(self).exec_()
         except Exception as e:
             ExceptionDialog(format_exc()).exec_()
 
     def _load_tree(self):
         self._view.setModel(CurrentTaskModel())
+
+    def _user_summary_report(self):
+        UserSummaryReportDialog(self).exec_()
