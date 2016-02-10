@@ -225,6 +225,11 @@ class TaskTypeTableModel(PattsTableModel):
         )
         super().__init__('TaskType', patts.get_types, fields, parent)
 
+        keys = [int(k) for k in self._keys]
+        keys.sort()
+        for i in range(len(keys)):
+            self._keys[i] = keys[i]
+
     @property
     def parent_column(self):
         return 1
@@ -434,11 +439,6 @@ class TaskTypeEditor(Editor):
         super().__init__(model, parent)
         self._view.setItemDelegate(TaskTypeItemDelegate(model.parent_column,
                                                         self._row_count))
-
-        keys = [int(k) for k in self._keys]
-        keys.sort()
-        for i in range(len(keys)):
-            self._keys[i] = keys[i]
 
     def add(self):
         try:
