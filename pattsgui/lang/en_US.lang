@@ -71,6 +71,7 @@ Reports.endDate = To:
 Reports.startDate = From: 
 Reports.summaryFor = Time Summary for {}
 Reports.summaryResults = Time Summary Results
+Reports.taskSummary = Task Time Summary
 Reports.timeSpentFormat = {}h {}m
 Reports.userSummary = User Time Summary
 Reports.run = Run

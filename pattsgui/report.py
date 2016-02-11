@@ -34,26 +34,38 @@ def sort_types(keys, already_used):
             child_types = list(patts.get_child_types(key).keys())
             sort_types(child_types, already_used)
 
+def task_time_sum(result_set):
+    summary = {}
+    for item in result_set:
+        type = item['typeID']
+        startTime = datetime.strptime(item['startTime'], _TIME_FORMAT)
+        stopTime = datetime.strptime(item['stopTime'], _TIME_FORMAT)
+        diff = stopTime - startTime
+
+        try:
+            summary[type] += diff
+        except KeyError:
+            summary[type] = diff
+
+    return summary
+
 def result_stamp(delta):
     minutes = (delta.seconds // 60) % 60
     hours = (delta.seconds // 3600) + (delta.days * 24)
 
     return _('Reports.timeSpentFormat').format(hours, format(minutes, '2d'))
 
-class UserSummaryReportResultsDialog(QDialog):
-    def __init__(self, user, summary, parent=None):
+class SummaryReportResultsDialog(QDialog):
+    def __init__(self, data, summary, parent=None):
         super().__init__(parent)
 
         layout = QVBoxLayout()
         types = []
         patts.connect()
         try:
-            user_info = patts.get_user_byid(user)
-            user_name = '{} {} {}'.format(user_info['firstName'],
-                                          user_info['middleName'],
-                                          user_info['lastName'])
+            info = self._title_info(data)
+            self._title_string = _('Reports.summaryFor').format(info)
 
-            self._title_string = _('Reports.summaryFor').format(user_name)
             titleLabel = QLabel(self._title_string)
             titleLabelFont = titleLabel.font()
             titleLabelFont.setBold(True)
@@ -61,7 +73,6 @@ class UserSummaryReportResultsDialog(QDialog):
             layout.addWidget(titleLabel)
 
             sort_types(list(summary.keys()), types)
-
             for type in types:
                 if type not in summary:
                     continue
@@ -80,20 +91,20 @@ class UserSummaryReportResultsDialog(QDialog):
         self.setWindowTitle(_('Reports.summaryResults'))
         self.setLayout(layout)
 
-class UserSummaryReportDialog(QDialog):
+    def _title_info(self):
+        raise NotImplementedError()
+
+class SummaryReportDialog(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
 
-        self._user_box = QComboBox()
-        i = 0
-        for user in patts.get_users():
-            self._user_box.addItem(user)
-            if user == patts.get_user():
-                user_index = i
+        self._query = None
+        self._query_format = None
+        self._header = None
+        self._result_dialog_type = None
 
-            i += 1
-
-        self._user_box.setCurrentIndex(user_index)
+        self._selection_box = QComboBox()
+        self._init_selection_box()
 
         self._start_date = QCalendarWidget()
         self._end_date = QCalendarWidget()
@@ -119,39 +130,100 @@ class UserSummaryReportDialog(QDialog):
         buttonBox.addWidget(runButton)
 
         layout = QVBoxLayout()
-        layout.addWidget(self._user_box)
+        layout.addWidget(self._selection_box)
         layout.addLayout(startDateBox)
         layout.addLayout(endDateBox)
         layout.addLayout(buttonBox)
 
         self.accepted.connect(self._run_report)
         self.setLayout(layout)
-        self.setWindowTitle(_('Reports.userSummary'))
 
     def _run_report(self):
+        if None in (self._query, self._query_format, self._header,
+                    self._result_dialog_type):
+            raise NotImplementedError('No query for report')
+
         try:
-            user = self._user_box.currentText()
-            start_date = self._start_date.selectedDate().toString(Qt.ISODate)
-            end_date = self._end_date.selectedDate().toString(Qt.ISODate)
-
-            query = ('SELECT typeID,startTime,stopTime FROM TaskItem '
-                     "WHERE state=1 AND userID='{}' AND stopTime IS NOT NULL "
-                     "AND startTime>='{}' AND startTime<='{} 23:59:59'")
-            query = query.format(user, start_date, end_date)
-
-            results = patts.query(query)
-            summary = {}
-            for item in results:
-                type = item['typeID']
-                startTime = datetime.strptime(item['startTime'], _TIME_FORMAT)
-                stopTime = datetime.strptime(item['stopTime'], _TIME_FORMAT)
-                diff = stopTime - startTime
-
-                try:
-                    summary[type] += diff
-                except KeyError:
-                    summary[type] = diff
-
-            UserSummaryReportResultsDialog(user, summary, self.parent()).exec_()
-        except:
+            query = self._query.format(*self._query_format)
+            results = task_time_sum(patts.query(query))
+            self._result_dialog_type(self._header, results, self.parent()).exec_()
+        except Exception:
             ExceptionDialog(format_exc()).exec_()
+
+    def _init_selection_box(self):
+        raise NotImplementedError()
+
+class UserSummaryReportResultsDialog(SummaryReportResultsDialog):
+    def __init__(self, user, summary, parent=None):
+        super().__init__(user, summary, parent)
+
+    def _title_info(self, user):
+        user = patts.get_user_byid(user)
+        return '{} {} {}'.format(user['firstName'], user['middleName'],
+                                 user['lastName'])
+
+class UserSummaryReportDialog(SummaryReportDialog):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self._result_dialog_type = UserSummaryReportResultsDialog
+        self._query = ('SELECT typeID,startTime,stopTime FROM TaskItem '
+                       "WHERE state=1 AND userID='{}' AND stopTime IS NOT NULL "
+                       "AND startTime>='{}' AND startTime<='{} 23:59:59'")
+
+        self.setWindowTitle(_('Reports.userSummary'))
+
+    def _init_selection_box(self):
+        i = 0
+        for user in patts.get_users():
+            self._selection_box.addItem(user)
+            if user == patts.get_user():
+                user_index = i
+
+            i += 1
+
+        self._selection_box.setCurrentIndex(user_index)
+
+    def _run_report(self):
+        self._header = self._selection_box.currentText()
+        start_date = self._start_date.selectedDate().toString(Qt.ISODate)
+        end_date = self._end_date.selectedDate().toString(Qt.ISODate)
+        self._query_format = (self._header, start_date, end_date)
+
+        super()._run_report()
+
+class TaskSummaryReportResultsDialog(SummaryReportResultsDialog):
+    def __init__(self, type, summary, parent=None):
+        super().__init__(type, summary, parent)
+
+    def _title_info(self, type):
+        type = patts.get_type_byid(type)
+        return type['displayName']
+
+class TaskSummaryReportDialog(SummaryReportDialog):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self._result_dialog_type = TaskSummaryReportResultsDialog
+        self._query = ('SELECT typeID,startTime,stopTime FROM TaskItem '
+                       "WHERE state=1 AND typeID={} AND stopTime IS NOT NULL "
+                       "AND startTime>='{}' AND startTime<='{} 23:59:59'")
+
+        self.setWindowTitle(_('Reports.taskSummary'))
+
+    def _init_selection_box(self):
+        types = patts.get_types()
+        keys = [int(k) for k in types]
+        keys.sort()
+
+        for key in keys:
+            type = str(key)
+            text = '({}) {}'.format(type, types[type]['displayName'])
+            self._selection_box.addItem(text)
+
+    def _run_report(self):
+        index = self._selection_box.currentText().index(')')
+        self._header = self._selection_box.currentText()[1:index]
+        start_date = self._start_date.selectedDate().toString(Qt.ISODate)
+        end_date = self._end_date.selectedDate().toString(Qt.ISODate)
+        self._query_format = (self._header, start_date, end_date)
+
+        super()._run_report()
