@@ -256,7 +256,7 @@ class UsernameValidator(QValidator):
         super().__init__()
 
     def validate(self, input, pos):
-        if len(input) > 8:
+        if len(input) > 16:
             return (QValidator.Invalid, input, pos - 1)
 
         out = ''
