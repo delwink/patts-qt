@@ -96,3 +96,13 @@ User.isAdmin = Admin Rights
 User.firstName = First Name
 User.middleName = Middle Name
 User.lastName = Last Name
+
+VersionCheck.ahead = Your database is {} {} out of date.\nYou may encounter some unexpected errors if you continue.
+VersionCheck.behind = Your database is {} {} ahead of your current software.\nYou may encounter some unexpected errors if you continue.
+VersionCheck.continue = Continue
+VersionCheck.equal = Your database is up to date.
+VersionCheck.maintenance = Your database appears to be in a version transition.\nPlease check with your admin or contact Delwink support.
+VersionCheck.quit = Quit
+VersionCheck.title = Database Version Notice
+VersionCheck.version = version
+VersionCheck.versions = versions

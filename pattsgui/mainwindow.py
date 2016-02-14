@@ -18,8 +18,9 @@
 import patts
 
 from PyQt4.QtCore import QAbstractTableModel, QObject, Qt, SIGNAL
-from PyQt4.QtGui import QAction, QComboBox, QIcon, QKeySequence, QMainWindow
-from PyQt4.QtGui import QPushButton, QTableView, QVBoxLayout, QWidget
+from PyQt4.QtGui import QAction, QComboBox, QDialog, QHBoxLayout, QIcon
+from PyQt4.QtGui import QKeySequence, QLabel, QMainWindow, QPushButton
+from PyQt4.QtGui import QTableView, QVBoxLayout, QWidget
 from .aboutdialog import AboutDialog
 from .config import get, put
 from .editor import TaskTypeEditor, UserEditor
@@ -27,6 +28,43 @@ from .hostname import split_host
 from .lang import _
 from .exception import ExceptionDialog, format_exc
 from .report import UserSummaryReportDialog, TaskSummaryReportDialog
+
+class VersionCheckDialog(QDialog):
+    def __init__(self, diff, parent=None):
+        super().__init__(parent)
+
+        layout = QVBoxLayout()
+
+        if abs(diff) == 1:
+            version_word = _('VersionCheck.version')
+        else:
+            version_word = _('VersionCheck.versions')
+
+        if diff < 0:
+            if patts.get_db_version() == 0:
+                text = _('VersionCheck.maintenance')
+            else:
+                text = _('VersionCheck.ahead').format(-diff, version_word)
+        elif diff > 0:
+            text = _('VersionCheck.behind').format(diff, version_word)
+        else:
+            text = _('VersionCheck.equal')
+
+        layout.addWidget(QLabel(text.replace('\\n', '\n')))
+
+        quitButton = QPushButton(_('VersionCheck.quit'))
+        quitButton.clicked.connect(self.reject)
+
+        continueButton = QPushButton(_('VersionCheck.continue'))
+        continueButton.clicked.connect(self.accept)
+
+        buttonBox = QHBoxLayout()
+        buttonBox.addStretch(1)
+        buttonBox.addWidget(quitButton)
+        buttonBox.addWidget(continueButton)
+
+        layout.addLayout(buttonBox)
+        self.setWindowTitle(_('VersionCheck.title'))
 
 class CurrentTaskModel(QAbstractTableModel):
     def __init__(self, parent=None):
@@ -163,6 +201,12 @@ class MainWindow(QMainWindow):
                    port=port)
 
         super().__init__()
+
+        version_diff = patts.version_check()
+        if version_diff:
+            d = VersionCheckDialog()
+            d.rejected.connect(self.close)
+            d.exec_()
 
         menuBar = self.menuBar()
 
