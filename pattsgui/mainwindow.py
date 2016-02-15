@@ -204,7 +204,7 @@ class MainWindow(QMainWindow):
 
         version_diff = patts.version_check()
         if version_diff:
-            d = VersionCheckDialog()
+            d = VersionCheckDialog(version_diff)
             d.rejected.connect(self.close)
             d.exec_()
 
