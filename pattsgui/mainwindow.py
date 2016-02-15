@@ -29,6 +29,10 @@ from .lang import _
 from .exception import ExceptionDialog, format_exc
 from .report import UserSummaryReportDialog, TaskSummaryReportDialog
 
+def _panic():
+    patts.cleanup()
+    exit(0)
+
 class VersionCheckDialog(QDialog):
     def __init__(self, diff, parent=None):
         super().__init__(parent)
@@ -44,9 +48,9 @@ class VersionCheckDialog(QDialog):
             if patts.get_db_version() == 0:
                 text = _('VersionCheck.maintenance')
             else:
-                text = _('VersionCheck.ahead').format(-diff, version_word)
+                text = _('VersionCheck.behind').format(-diff, version_word)
         elif diff > 0:
-            text = _('VersionCheck.behind').format(diff, version_word)
+            text = _('VersionCheck.ahead').format(diff, version_word)
         else:
             text = _('VersionCheck.equal')
 
@@ -64,6 +68,7 @@ class VersionCheckDialog(QDialog):
         buttonBox.addWidget(continueButton)
 
         layout.addLayout(buttonBox)
+        self.setLayout(layout)
         self.setWindowTitle(_('VersionCheck.title'))
 
 class CurrentTaskModel(QAbstractTableModel):
@@ -205,7 +210,7 @@ class MainWindow(QMainWindow):
         version_diff = patts.version_check()
         if version_diff:
             d = VersionCheckDialog(version_diff)
-            d.rejected.connect(self.close)
+            d.rejected.connect(_panic)
             d.exec_()
 
         menuBar = self.menuBar()
