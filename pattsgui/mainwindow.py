@@ -19,8 +19,8 @@ import patts
 
 from PyQt4.QtCore import QAbstractTableModel, QObject, Qt, SIGNAL
 from PyQt4.QtGui import QAction, QComboBox, QDialog, QHBoxLayout, QIcon
-from PyQt4.QtGui import QKeySequence, QLabel, QMainWindow, QPushButton
-from PyQt4.QtGui import QTableView, QVBoxLayout, QWidget
+from PyQt4.QtGui import QKeySequence, QLabel, QLineEdit, QMainWindow
+from PyQt4.QtGui import QPushButton, QTableView, QVBoxLayout, QWidget
 from .aboutdialog import AboutDialog
 from .config import get, put
 from .editor import TaskTypeEditor, UserEditor
@@ -70,6 +70,88 @@ class VersionCheckDialog(QDialog):
         layout.addLayout(buttonBox)
         self.setLayout(layout)
         self.setWindowTitle(_('VersionCheck.title'))
+
+class TryAgainDialog(QDialog):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+
+        layout = QVBoxLayout()
+        layout.addWidget(QLabel(_('ChangePasswd.tryAgain')))
+
+        okButton = QPushButton(_('OK'))
+        layout.addWidget(okButton)
+        okButton.clicked.connect(self.accept)
+
+        self.setLayout(layout)
+        self.setWindowTitle(_('ChangePasswd.tryAgainTitle'))
+
+class ChangePasswordDialog(QDialog):
+    def __init__(self, old_pw, parent=None):
+        super().__init__(parent)
+
+        self._cancelled = False
+        self._pw = old_pw
+
+        layout = QVBoxLayout()
+
+        labelBox = QVBoxLayout()
+        labelBox.addWidget(QLabel(_('ChangePasswd.current')))
+        labelBox.addWidget(QLabel(_('ChangePasswd.new')))
+        labelBox.addWidget(QLabel(_('ChangePasswd.confirm')))
+
+        fieldBox = QVBoxLayout()
+
+        self._cur_box = QLineEdit()
+        self._cur_box.setEchoMode(QLineEdit.Password)
+        fieldBox.addWidget(self._cur_box)
+
+        self._new_box = QLineEdit()
+        self._new_box.setEchoMode(QLineEdit.Password)
+        fieldBox.addWidget(self._new_box)
+
+        self._confirm_box = QLineEdit()
+        self._confirm_box.setEchoMode(QLineEdit.Password)
+        fieldBox.addWidget(self._confirm_box)
+
+        buttonBox = QHBoxLayout()
+        buttonBox.addStretch(1)
+
+        cancelButton = QPushButton(_('cancel'))
+        cancelButton.clicked.connect(self.reject)
+        buttonBox.addWidget(cancelButton)
+
+        okButton = QPushButton(_('OK'))
+        okButton.setDefault(True)
+        okButton.clicked.connect(self.accept)
+        buttonBox.addWidget(okButton)
+
+        labelFieldBox = QHBoxLayout()
+        labelFieldBox.addLayout(labelBox)
+        labelFieldBox.addLayout(fieldBox)
+        layout.addLayout(labelFieldBox)
+        layout.addLayout(buttonBox)
+
+        self.rejected.connect(self._cancel)
+        self.setLayout(layout)
+        self.setWindowTitle(_('ChangePasswd.title'))
+
+    def get_new_pw(self):
+        self.exec_()
+        while (not self._cancelled
+               and (self._cur_box.text() != self._pw
+                    or not self._new_box.text()
+                    or self._new_box.text() != self._confirm_box.text())):
+            TryAgainDialog(self.parent()).exec_()
+            self.exec_()
+
+        return self._new_box.text()
+
+    def _cancel(self):
+        self._cancelled = True
+
+    @property
+    def cancelled(self):
+        return self._cancelled
 
 class CurrentTaskModel(QAbstractTableModel):
     def __init__(self, parent=None):
@@ -200,12 +282,14 @@ class MainWindowCentralWidget(QWidget):
 
 class MainWindow(QMainWindow):
     def __init__(self, user, passwd, host, database):
-        srv, port = split_host(host)
-
-        patts.init(host=srv, user=user, passwd=passwd, database=database,
-                   port=port)
+        self._srv, self._port = split_host(host)
+        self._user = user
+        self._pw = passwd
+        self._db = database
 
         super().__init__()
+
+        self._log_in()
 
         version_diff = patts.version_check()
         if version_diff:
@@ -216,6 +300,10 @@ class MainWindow(QMainWindow):
         menuBar = self.menuBar()
 
         sessionMenu = menuBar.addMenu(_('Session'))
+
+        passwdAction = QAction(_('ChangePasswd.title'), self)
+        passwdAction.triggered.connect(self._change_pw)
+        sessionMenu.addAction(passwdAction)
 
         logoutAction = QAction(_('Session.LogOut'), self)
         logoutAction.triggered.connect(self._log_out)
@@ -266,6 +354,25 @@ class MainWindow(QMainWindow):
         self._save_dims()
         patts.cleanup()
         super().closeEvent(event)
+
+    def _log_in(self):
+        patts.init(host=self._srv, user=self._user, passwd=self._pw,
+                   database=self._db, port=self._port)
+
+    def _change_pw(self):
+        d = ChangePasswordDialog(self._pw, self)
+        pw = d.get_new_pw()
+
+        if not d.cancelled:
+            try:
+                pw = patts.escape_string(pw)
+                patts.query("SET PASSWORD=PASSWORD('{}')".format(pw))
+            except Exception as e:
+                ExceptionDialog(format_exc()).exec_()
+
+            self._pw = pw
+            patts.cleanup()
+            self._log_in()
 
     def _log_out(self):
         put('Login', 'autologin', 'false')

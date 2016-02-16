@@ -238,8 +238,8 @@ class TaskTypeTableModel(PattsTableModel):
         return 1
 
 class TryAgainDialog(QDialog):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, parent=None):
+        super().__init__(parent)
 
         layout = QVBoxLayout()
         layout.addWidget(QLabel(_('NewUser.tryAgain')))
@@ -275,8 +275,6 @@ class NewUserDialog(QDialog):
     def __init__(self):
         super().__init__()
 
-        self._name = ''
-        self._passwd = ''
         self._cancelled = False
 
         labelBox = QVBoxLayout()
@@ -327,7 +325,7 @@ class NewUserDialog(QDialog):
         while (not self._cancelled
                and (not (self._name_box.text() and self._pw_box.text())
                     or self._pw_box.text() != self._confirm_box.text())):
-            TryAgainDialog().exec_()
+            TryAgainDialog(self.parent()).exec_()
             self.exec_()
 
         return (self._name_box.text(), self._pw_box.text())

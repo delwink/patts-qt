@@ -33,6 +33,13 @@ Admin.editUser = Edit User Accounts
 Admin.TaskTypes = Task Types
 Admin.Users = Users
 
+ChangePasswd.confirm = New Password Again:
+ChangePasswd.current = Current Password:
+ChangePasswd.new = New Password:
+ChangePasswd.title = Change Password
+ChangePasswd.tryAgain = Old password incorrect or new passwords did not match. Please try again.
+ChangePasswd.tryAgainTitle = Try Again
+
 Exception.label = An error occurred:
 
 Help = &Help
