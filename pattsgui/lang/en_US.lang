@@ -26,6 +26,7 @@ yes = Yes
 
 About.copyright = Copyright © 2015-2016 Delwink, LLC
 About.license = This program is free software: you can redistribute it and/or modify\nit under the terms of the GNU Affero General Public License as published by\nthe Free Software Foundation, version 3 only.\n\nThis program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the\nGNU Affero General Public License for more details.\n\nYou should have received a copy of the GNU Affero General Public License\nalong with this program. If not, see <http://gnu.org/licenses/>.
+About.title = About patts-qt
 
 Admin = &Admin
 Admin.editTaskType = Edit Task Types
@@ -64,7 +65,7 @@ LoginWindow.user = Username
 LoginWindow.userToolTip = User as which to log into the database
 
 MainWindow.refresh = Refresh
-MainWindow.title = PATTS - Server: {}, DB: {}, User: {}
+MainWindow.title = patts-qt - Server: {}, DB: {}, User: {}
 
 NewUser.name = Username: 
 NewUser.passwd = Password: 

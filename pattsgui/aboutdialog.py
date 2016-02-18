@@ -15,6 +15,7 @@
 ##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
 
+from patts import get_c_library_version, get_db_version
 from PyQt4.QtGui import QDialog, QLabel, QPushButton, QVBoxLayout, QWidget
 from .lang import _
 
@@ -29,19 +30,25 @@ class AboutDialog(QDialog):
 
         layout = QVBoxLayout()
 
-        title = QLabel("PATTS Ain't Time Tracking Software\n"
-                       'Version {}'.format(__version__))
+        title = QLabel('patts-qt v{}'.format(__version__))
 
         title_font = title.font()
         title_font.setPointSize(20)
         title_font.setBold(True)
         title.setFont(title_font)
 
+        versions = (
+            'patts module v{}'.format(patts_version),
+            'libpatts v{}'.format(get_c_library_version()),
+            'patts db v{}'.format(get_db_version())
+        )
+
         layout.addWidget(title)
-        layout.addWidget(QLabel('patts module v{}'.format(patts_version)))
+        layout.addWidget(QLabel('(' + ', '.join(versions) + ')'))
         layout.addWidget(QLabel(_('About.copyright').replace('\\n', '\n')))
         layout.addWidget(QLabel(_('About.license').replace('\\n', '\n')))
 
         layout.addWidget(okButton)
 
         self.setLayout(layout)
+        self.setWindowTitle(_('About.title'))
