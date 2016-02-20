@@ -17,11 +17,12 @@
 
 import patts
 
-from PyQt4.QtCore import QAbstractTableModel, QModelIndex, Qt
+from PyQt4.QtCore import QAbstractItemModel, QAbstractTableModel, QModelIndex
+from PyQt4.QtCore import Qt
 from PyQt4.QtGui import QApplication, QDialog, QGraphicsWidget, QHBoxLayout
 from PyQt4.QtGui import QLabel, QLineEdit, QPushButton, QStyle
 from PyQt4.QtGui import QStyledItemDelegate, QStyleOptionButton, QTableView
-from PyQt4.QtGui import QTableWidgetItem, QValidator, QVBoxLayout
+from PyQt4.QtGui import QTableWidgetItem, QTreeView, QValidator, QVBoxLayout
 from .exception import ExceptionDialog, format_exc
 from .lang import _
 
@@ -451,3 +452,125 @@ class TaskTypeEditor(Editor):
 
     def _row_count(self):
         return self._view.model().rowCount()
+
+class TaskTypeTreeNode:
+    def __init__(self, type_id, name, parent=None):
+        self._id = type_id
+        self._name = name
+        self._parent = parent
+        self._children = []
+
+        if parent is not None:
+            parent.add_child(self)
+
+    def add_child(self, child):
+        self._children.append(child)
+
+    def get_child(self, row):
+        return self._children[row]
+
+    def __len__(self):
+        return len(self._children)
+
+    @property
+    def parent(self):
+        return self._parent
+
+    @property
+    def row(self):
+        if self._parent is not None:
+            return self._parent._children.index(self)
+
+    @property
+    def type_id(self):
+        return self._id
+
+    @property
+    def name(self):
+        return self._name
+
+def load_tree(types, root):
+    for type in types:
+        if type['parentID'] == root.type_id:
+            new = TaskTypeTreeNode(type['id'], type['displayName'], root)
+            load_tree(types, new)
+
+class TaskTypeTreeModel(QAbstractItemModel):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+
+        query = ('SELECT id,parentID,displayName FROM TaskType WHERE state=1 '
+                 'ORDER BY parentID')
+        type_list = patts.query(query)
+
+        self._root = TaskTypeTreeNode('0', '')
+        load_tree(type_list, self._root)
+
+    def rowCount(self, parent):
+        if parent.isValid():
+            node = parent.internalPointer()
+        else:
+            node = self._root
+
+        return len(node)
+
+    def columnCount(self, parent):
+        return 1
+
+    def flags(self, index):
+        flags = Qt.ItemIsEnabled
+        flags |= Qt.ItemIsSelectable
+        flags |= Qt.ItemIsEditable
+
+        return flags
+
+    def data(self, index, role):
+        if not index.isValid():
+            return None
+
+        node = index.internalPointer()
+
+        if role in (Qt.DisplayRole, Qt.EditRole):
+            return node.name
+
+    def headerData(self, section, orientation, role):
+        return _('Admin.TaskTypes')
+
+    def parent(self, index):
+        node = index.internalPointer()
+        parent = node.parent
+
+        if node == self._root or parent.row is None:
+            return QModelIndex()
+
+        return self.createIndex(parent.row, 0, parent)
+
+    def index(self, row, column, parent):
+        if parent.isValid():
+            node = parent.internalPointer()
+        else:
+            node = self._root
+
+        child = node.get_child(row)
+
+        if child is None:
+            return QModelIndex()
+
+        return self.createIndex(row, column, child)
+
+class TaskTypeTreeEditor(QDialog):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self._view = QTreeView()
+
+        self._refresh()
+
+        layout = QVBoxLayout()
+        layout.addWidget(self._view)
+
+        self.setLayout(layout)
+        self.setWindowTitle(_('Admin.editTaskType'))
+
+    def _refresh(self):
+        model = TaskTypeTreeModel()
+        self._view.setModel(model)

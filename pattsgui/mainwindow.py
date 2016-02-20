@@ -23,7 +23,7 @@ from PyQt4.QtGui import QKeySequence, QLabel, QLineEdit, QMainWindow
 from PyQt4.QtGui import QPushButton, QTableView, QVBoxLayout, QWidget
 from .aboutdialog import AboutDialog
 from .config import get, put
-from .editor import TaskTypeEditor, UserEditor
+from .editor import TaskTypeTreeEditor, UserEditor
 from .hostname import split_host
 from .lang import _
 from .exception import ExceptionDialog, format_exc
@@ -398,7 +398,7 @@ class MainWindow(QMainWindow):
 
     def _show_tasks(self):
         try:
-            TaskTypeEditor(self).exec_()
+            TaskTypeTreeEditor(self).exec_()
         except Exception as e:
             ExceptionDialog(format_exc()).exec_()
 
