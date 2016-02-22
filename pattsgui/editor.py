@@ -469,6 +469,9 @@ class TaskTypeTreeNode:
     def get_child(self, row):
         return self._children[row]
 
+    def set_name(self, name):
+        self._name = name
+
     def __len__(self):
         return len(self._children)
 
@@ -533,6 +536,17 @@ class TaskTypeTreeModel(QAbstractItemModel):
         if role in (Qt.DisplayRole, Qt.EditRole):
             return node.name
 
+    def setData(self, index, value, role=Qt.EditRole):
+        if index.isValid() and role == Qt.EditRole:
+            node = index.internalPointer()
+
+            qval = patts.escape_string(value, quote=True)
+            patts.query('UPDATE TaskType SET displayName={} WHERE id={}'.format(qval, node.type_id))
+
+            node.set_name(value)
+
+        return False
+
     def headerData(self, section, orientation, role):
         return _('Admin.TaskTypes')
 
@@ -574,3 +588,4 @@ class TaskTypeTreeEditor(QDialog):
     def _refresh(self):
         model = TaskTypeTreeModel()
         self._view.setModel(model)
+        self._view.expandAll()
