@@ -453,6 +453,26 @@ class TaskTypeEditor(Editor):
     def _row_count(self):
         return self._view.model().rowCount()
 
+class TaskTypeNameValidator(QValidator):
+    def __init__(self):
+        super().__init__()
+
+    def validate(self, input, pos):
+        if len(input) > 45:
+            return (QValidator.Invalid, input, pos - 1)
+
+        return (QValidator.Acceptable, input, pos)
+
+class TaskTypeNameDelegate(QStyledItemDelegate):
+    def __init__(self):
+        super().__init__()
+
+    def createEditor(self, widget, option, index):
+        if index.isValid():
+            editor = QLineEdit(widget)
+            editor.setValidator(TaskTypeNameValidator())
+            return editor
+
 class TaskTypeTreeNode:
     def __init__(self, type_id, name, parent=None):
         self._id = type_id
@@ -576,6 +596,7 @@ class TaskTypeTreeEditor(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
         self._view = QTreeView()
+        self._view.setItemDelegate(TaskTypeNameDelegate())
 
         self._refresh()
 
