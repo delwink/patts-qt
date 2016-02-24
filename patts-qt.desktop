@@ -1,0 +1,9 @@
+[Desktop Entry]
+Comment=Qt GUI for PATTS
+Exec=patts-qt
+GenericName=patts-qt
+Name=patts-qt
+Categories=Network;
+StartupNotify=false
+Terminal=false
+Type=Application

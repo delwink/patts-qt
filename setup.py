@@ -1,5 +1,8 @@
-from setuptools import setup
+import os
 import re
+import sys
+
+from setuptools import setup
 
 version = ''
 with open('pattsgui/aboutdialog.py', 'r') as f:
@@ -8,6 +11,13 @@ with open('pattsgui/aboutdialog.py', 'r') as f:
 
 if not version:
     raise RuntimeError('Cannot find version information')
+
+data_files = []
+if os.name == 'posix':
+    usr_share = os.path.join(sys.prefix, 'share')
+    data_files += [
+        (os.path.join(usr_share, 'applications'), ['patts-qt.desktop'])
+    ]
 
 setup(
     name='patts-qt',
@@ -24,6 +34,7 @@ setup(
         'pattsgui': ['lang/*']
     },
 
+    data_files=data_files,
     package_dir={'pattsgui': 'pattsgui'},
     scripts=['patts-qt'],
     include_package_data=True,
