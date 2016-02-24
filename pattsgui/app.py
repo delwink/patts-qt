@@ -137,6 +137,8 @@ class PattsApp(QApplication):
 
                     if self._cancelled:
                         exit(0)
+                elif type(e) is KeyError:
+                    self._login('Login.badUser')
                 elif type(e) is TypeError:
                     exit(0) # cancelled
                 else:
