@@ -253,8 +253,8 @@ class UsernameValidator(QValidator):
         return (QValidator.Acceptable, out, pos)
 
 class NewUserDialog(QDialog):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, parent=None):
+        super().__init__(parent)
 
         self._cancelled = False
 
@@ -365,7 +365,7 @@ class UserEditor(Editor):
 
     def add(self):
         try:
-            dialog = NewUserDialog()
+            dialog = NewUserDialog(self)
             name, passwd = dialog.get_info()
 
             if not dialog.cancelled:
