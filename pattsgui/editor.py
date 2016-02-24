@@ -445,7 +445,7 @@ class TaskTypeTreeModel(QAbstractItemModel):
         super().__init__(parent)
 
         query = ('SELECT id,parentID,displayName FROM TaskType WHERE state=1 '
-                 'ORDER BY parentID')
+                 'ORDER BY parentID,displayName')
         type_list = patts.query(query)
 
         self._root = TaskTypeTreeNode('0', '')
@@ -594,11 +594,12 @@ class TaskTypeTreeEditor(QDialog):
 
     def _open_menu(self, position):
         indexes = self._view.selectedIndexes()
-        if len(indexes) == 0:
-            return
-
-        menu = QMenu()
         ids = [index.internalPointer().type_id for index in indexes]
+        menu = QMenu()
+
+        if len(indexes) == 0:
+            newAction = NewTypeAction('0', self._refresh, self)
+            menu.addAction(newAction)
 
         if len(indexes) == 1:
             newAction = NewTypeAction(ids[0], self._refresh, self)
