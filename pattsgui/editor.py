@@ -19,10 +19,11 @@ import patts
 
 from PyQt4.QtCore import QAbstractItemModel, QAbstractTableModel, QModelIndex
 from PyQt4.QtCore import Qt
-from PyQt4.QtGui import QApplication, QDialog, QGraphicsWidget, QHBoxLayout
-from PyQt4.QtGui import QLabel, QLineEdit, QPushButton, QStyle
-from PyQt4.QtGui import QStyledItemDelegate, QStyleOptionButton, QTableView
-from PyQt4.QtGui import QTableWidgetItem, QTreeView, QValidator, QVBoxLayout
+from PyQt4.QtGui import QAction, QApplication, QDialog, QGraphicsWidget
+from PyQt4.QtGui import QHBoxLayout, QLabel, QLineEdit, QMenu, QPushButton
+from PyQt4.QtGui import QStyle, QStyledItemDelegate, QStyleOptionButton
+from PyQt4.QtGui import QTableView, QTableWidgetItem, QTreeView, QValidator
+from PyQt4.QtGui import QVBoxLayout
 from .exception import ExceptionDialog, format_exc
 from .lang import _
 
@@ -217,27 +218,6 @@ class UserTableModel(PattsTableModel):
         else:
             super().add_change(queries, changes, row, i, j)
 
-class TaskTypeTableModel(PattsTableModel):
-    def __init__(self, parent=None):
-        fields = (
-            Field('state', boolean=True),
-            Field('parentID'),
-            Field('displayName', quoted=True)
-        )
-        super().__init__('TaskType', patts.get_types, fields, parent)
-
-    def init_rows(self, table_info):
-        keys = [int(k) for k in self._keys]
-        keys.sort()
-        for i in range(len(keys)):
-            self._keys[i] = str(keys[i])
-
-        super().init_rows(table_info)
-
-    @property
-    def parent_column(self):
-        return 1
-
 class TryAgainDialog(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -395,64 +375,6 @@ class UserEditor(Editor):
         except Exception as e:
             ExceptionDialog(format_exc()).exec_()
 
-class ParentTaskValidator(QValidator):
-    def __init__(self, row, get_num_rows):
-        super().__init__()
-        self._id = row + 1
-        self._nr = get_num_rows
-
-    def validate(self, input, pos):
-        if len(input) == 0:
-            return (QValidator.Intermediate, input, pos)
-
-        try:
-            n = int(input)
-
-            if n < 0 or n > self._nr():
-                return (QValidator.Invalid, input, pos - 1)
-
-            if n == self._id:
-                return (QValidator.Intermediate, input, pos)
-
-            return (QValidator.Acceptable, input, pos)
-        except ValueError:
-            return (QValidator.Invalid, input, pos - 1)
-
-class TaskTypeItemDelegate(QStyledItemDelegate):
-    def __init__(self, parent_column, get_num_rows):
-        super().__init__()
-        self._pc = parent_column
-        self._nr = get_num_rows
-
-    def createEditor(self, widget, option, index):
-        if not index.isValid():
-            return 0
-
-        if index.column() == self._pc:
-            editor = QLineEdit(widget)
-            editor.setValidator(ParentTaskValidator(index.row(), self._nr))
-            return editor
-
-        return super().createEditor(widget, option, index)
-
-class TaskTypeEditor(Editor):
-    def __init__(self, parent=None):
-        model = TaskTypeTableModel()
-        super().__init__(model, parent)
-        self._view.setItemDelegate(TaskTypeItemDelegate(model.parent_column,
-                                                        self._row_count))
-
-    def add(self):
-        try:
-            patts.create_task('0', '')
-            self._view.setModel(TaskTypeTableModel())
-            self._view.resizeColumnsToContents()
-        except Exception as e:
-            ExceptionDialog(format_exc()).exec_()
-
-    def _row_count(self):
-        return self._view.model().rowCount()
-
 class TaskTypeNameValidator(QValidator):
     def __init__(self):
         super().__init__()
@@ -592,11 +514,75 @@ class TaskTypeTreeModel(QAbstractItemModel):
 
         return self.createIndex(row, column, child)
 
+class NewTypeAction(QAction):
+    def __init__(self, parent_id, refresh, parent=None):
+        super().__init__(_('TaskType.add'), parent)
+        self._parent = parent_id
+        self._refresh = refresh
+
+        self.triggered.connect(self._create)
+
+    def _create(self):
+        patts.create_task(self._parent, _('TaskType.newTaskName'))
+        self._refresh()
+
+class DeleteConfirmationDialog(QDialog):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+
+        layout = QVBoxLayout()
+
+        textBox = QHBoxLayout()
+        textBox.addStretch(1)
+        textBox.addWidget(QLabel(_('DeleteConfirmation.text')))
+        textBox.addStretch(1)
+        layout.addLayout(textBox)
+
+        cancelButton = QPushButton(_('cancel'))
+        cancelButton.clicked.connect(self.reject)
+
+        okButton = QPushButton(_('OK'))
+        okButton.clicked.connect(self.accept)
+
+        buttonBox = QHBoxLayout()
+        buttonBox.addStretch(1)
+        buttonBox.addWidget(cancelButton)
+        buttonBox.addWidget(okButton)
+        layout.addLayout(buttonBox)
+
+        self.setLayout(layout)
+        self.setWindowTitle(_('DeleteConfirmation.title'))
+
+class DeleteTypeAction(QAction):
+    def __init__(self, ids, refresh, parent=None):
+        super().__init__(_('TaskType.delete'), parent)
+        self._ids = ids
+        self._refresh = refresh
+
+        self.triggered.connect(self._check)
+
+    def _check(self):
+        d = DeleteConfirmationDialog(self.parent())
+        d.accepted.connect(self._delete)
+        d.exec_()
+
+    def _delete(self):
+        patts.connect()
+        try:
+            for id in self._ids:
+                patts.delete_task(id)
+        finally:
+            patts.close()
+
+        self._refresh()
+
 class TaskTypeTreeEditor(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
         self._view = QTreeView()
         self._view.setItemDelegate(TaskTypeNameDelegate())
+        self._view.setContextMenuPolicy(Qt.CustomContextMenu)
+        self._view.customContextMenuRequested.connect(self._open_menu)
 
         self._refresh()
 
@@ -605,6 +591,23 @@ class TaskTypeTreeEditor(QDialog):
 
         self.setLayout(layout)
         self.setWindowTitle(_('Admin.editTaskType'))
+
+    def _open_menu(self, position):
+        indexes = self._view.selectedIndexes()
+        if len(indexes) == 0:
+            return
+
+        menu = QMenu()
+        ids = [index.internalPointer().type_id for index in indexes]
+
+        if len(indexes) == 1:
+            newAction = NewTypeAction(ids[0], self._refresh, self)
+            menu.addAction(newAction)
+
+        deleteAction = DeleteTypeAction(ids, self._refresh, self)
+        menu.addAction(deleteAction)
+
+        menu.exec_(self._view.viewport().mapToGlobal(position))
 
     def _refresh(self):
         model = TaskTypeTreeModel()

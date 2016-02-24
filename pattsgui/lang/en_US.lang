@@ -41,6 +41,9 @@ ChangePasswd.title = Change Password
 ChangePasswd.tryAgain = Old password incorrect or new passwords did not match. Please try again.
 ChangePasswd.tryAgainTitle = Try Again
 
+DeleteConfirmation.text = Really delete?
+DeleteConfirmation.title = Are you sure?
+
 Exception.label = An error occurred:
 
 Help = &Help
@@ -95,9 +98,9 @@ TaskTable.clockOut = Clock out
 TaskTable.startTime = Started
 TaskTable.typeID = Task
 
-TaskType.state = Active
-TaskType.parentID = Parent ID
-TaskType.displayName = Display Name
+TaskType.add = Add child type
+TaskType.delete = Delete selected
+TaskType.newTaskName = New Task
 
 User.state = Active
 User.isAdmin = Admin Rights
