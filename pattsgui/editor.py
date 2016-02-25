@@ -256,7 +256,7 @@ class NewUserDialog(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
 
-        self._cancelled = False
+        self._canceled = False
 
         labelBox = QVBoxLayout()
         labelBox.addWidget(QLabel(_('NewUser.name')))
@@ -283,7 +283,7 @@ class NewUserDialog(QDialog):
 
         cancelButton = QPushButton(_('cancel'))
         cancelButton.clicked.connect(self.reject)
-        self.rejected.connect(self._set_cancelled)
+        self.rejected.connect(self._set_canceled)
 
         okButton = QPushButton(_('OK'))
         okButton.setDefault(True)
@@ -303,7 +303,7 @@ class NewUserDialog(QDialog):
 
     def get_info(self):
         self.exec_()
-        while (not self._cancelled
+        while (not self._canceled
                and (not (self._name_box.text() and self._pw_box.text())
                     or self._pw_box.text() != self._confirm_box.text())):
             TryAgainDialog(self.parent()).exec_()
@@ -311,12 +311,12 @@ class NewUserDialog(QDialog):
 
         return (self._name_box.text(), self._pw_box.text())
 
-    def _set_cancelled(self):
-        self._cancelled = True
+    def _set_canceled(self):
+        self._canceled = True
 
     @property
-    def cancelled(self):
-        return self._cancelled
+    def canceled(self):
+        return self._canceled
 
 class Editor(QDialog):
     def __init__(self, model, parent=None):
@@ -368,7 +368,7 @@ class UserEditor(Editor):
             dialog = NewUserDialog(self)
             name, passwd = dialog.get_info()
 
-            if not dialog.cancelled:
+            if not dialog.canceled:
                 patts.create_user(name, '%', passwd)
                 self._view.setModel(UserTableModel())
                 self._view.resizeColumnsToContents()

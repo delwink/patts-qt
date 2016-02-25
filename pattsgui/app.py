@@ -1,6 +1,6 @@
 ##
 ##  patts-qt - Qt GUI client for PATTS
-##  Copyright (C) 2015 Delwink, LLC
+##  Copyright (C) 2015-2016 Delwink, LLC
 ##
 ##  This program is free software: you can redistribute it and/or modify
 ##  it under the terms of the GNU Affero General Public License as published by
@@ -92,7 +92,7 @@ class PattsApp(QApplication):
     def __init__(self, argv):
         super().__init__(argv)
 
-        self._cancelled = False
+        self._canceled = False
         self._mwin = None
         self._sd = SetupDialog()
         self._sd.accepted.connect(self._setup)
@@ -102,7 +102,7 @@ class PattsApp(QApplication):
             ld = LanguageDialog()
             rc = ld.exec_()
             if rc != QDialog.Accepted:
-                exit(0) # cancelled
+                exit(0) # canceled
 
             set_lang(ld.lang)
             put('Global', 'firstrun', 'false')
@@ -135,12 +135,12 @@ class PattsApp(QApplication):
                     else:
                         self._login('Error {}'.format(errno))
 
-                    if self._cancelled:
+                    if self._canceled:
                         exit(0)
                 elif type(e) is KeyError:
                     self._login('Login.badUser')
                 elif type(e) is TypeError:
-                    exit(0) # cancelled
+                    exit(0) # canceled
                 else:
                     ExceptionDialog(format_exc()).exec_()
                     raise
@@ -156,14 +156,14 @@ class PattsApp(QApplication):
             if get('Login', 'autologin').lower() == 'true':
                 put('Login', 'passwd', self._passwd)
         except TypeError:
-            self._cancelled = True
+            self._canceled = True
 
     def exec_(self):
         if self._user and self._passwd and self._host and self._db:
             self._mwin.show()
             return super().exec_()
         else:
-            if self._cancelled:
+            if self._canceled:
                 exit(0)
             elif not self._user:
                 self._login('Login.badUser')

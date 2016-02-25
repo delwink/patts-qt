@@ -89,7 +89,7 @@ class ChangePasswordDialog(QDialog):
     def __init__(self, old_pw, parent=None):
         super().__init__(parent)
 
-        self._cancelled = False
+        self._canceled = False
         self._pw = old_pw
 
         layout = QVBoxLayout()
@@ -137,7 +137,7 @@ class ChangePasswordDialog(QDialog):
 
     def get_new_pw(self):
         self.exec_()
-        while (not self._cancelled
+        while (not self._canceled
                and (self._cur_box.text() != self._pw
                     or not self._new_box.text()
                     or self._new_box.text() != self._confirm_box.text())):
@@ -147,11 +147,11 @@ class ChangePasswordDialog(QDialog):
         return self._new_box.text()
 
     def _cancel(self):
-        self._cancelled = True
+        self._canceled = True
 
     @property
-    def cancelled(self):
-        return self._cancelled
+    def canceled(self):
+        return self._canceled
 
 class CurrentTaskModel(QAbstractTableModel):
     def __init__(self, parent=None):
@@ -363,7 +363,7 @@ class MainWindow(QMainWindow):
         d = ChangePasswordDialog(self._pw, self)
         pw = d.get_new_pw()
 
-        if not d.cancelled:
+        if not d.canceled:
             try:
                 pw = patts.escape_string(pw)
                 patts.query("SET PASSWORD=PASSWORD('{}')".format(pw))

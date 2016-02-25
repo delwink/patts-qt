@@ -27,7 +27,7 @@ class LoginWindow(QDialog):
                  cancelText='cancel'):
         super().__init__()
 
-        self._cancelled = False
+        self._canceled = False
         self._ready = False
 
         logInButton = QPushButton(_(logInText))
@@ -112,7 +112,7 @@ class LoginWindow(QDialog):
     def _cancel(self):
         self.hide()
         self.deleteLater()
-        self._cancelled = True
+        self._canceled = True
         self._ready = True
 
     def _set_auto(self):
@@ -130,7 +130,7 @@ class LoginWindow(QDialog):
     def get_info(self):
         self._ready = False
         self.exec_()
-        if self._cancelled or not self._ready:
+        if self._canceled or not self._ready:
             return (None, None, None, None)
 
         return (self._user, self._pass, self._server, self._db)
