@@ -22,7 +22,7 @@ from PyQt4.QtGui import QAction, QComboBox, QDialog, QHBoxLayout, QIcon
 from PyQt4.QtGui import QKeySequence, QLabel, QLineEdit, QMainWindow
 from PyQt4.QtGui import QPushButton, QTableView, QVBoxLayout, QWidget
 from .aboutdialog import AboutDialog
-from .config import get, put
+from .config import get, put, OptionsDialog
 from .editor import TaskTypeTreeEditor, UserEditor
 from .hostname import split_host
 from .lang import _
@@ -301,6 +301,12 @@ class MainWindow(QMainWindow):
 
         sessionMenu = menuBar.addMenu(_('Session'))
 
+        optionsAction = QAction(_('OptionsDialog.title'), self)
+        optionsAction.triggered.connect(self._open_options)
+        sessionMenu.addAction(optionsAction)
+
+        sessionMenu.addSeparator()
+
         passwdAction = QAction(_('ChangePasswd.title'), self)
         passwdAction.triggered.connect(self._change_pw)
         sessionMenu.addAction(passwdAction)
@@ -358,6 +364,9 @@ class MainWindow(QMainWindow):
     def _log_in(self):
         patts.init(host=self._srv, user=self._user, passwd=self._pw,
                    database=self._db, port=self._port)
+
+    def _open_options(self):
+        OptionsDialog(self).exec_()
 
     def _change_pw(self):
         d = ChangePasswordDialog(self._pw, self)

@@ -1,6 +1,6 @@
 ##
 ##  patts-qt - Qt GUI client for PATTS
-##  Copyright (C) 2015 Delwink, LLC
+##  Copyright (C) 2015-2016 Delwink, LLC
 ##
 ##  This program is free software: you can redistribute it and/or modify
 ##  it under the terms of the GNU Affero General Public License as published by
@@ -15,9 +15,11 @@
 ##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
 
+from configparser import ConfigParser
 from os.path import expanduser, join, exists
 from os import makedirs
-from configparser import ConfigParser
+from PyQt4.QtGui import QComboBox, QDialog, QHBoxLayout, QLabel, QPushButton
+from PyQt4.QtGui import QVBoxLayout
 
 CONFIG_DIR = join(expanduser('~'), '.patts')
 CONFIG_PATH = join(CONFIG_DIR, 'config.ini')
@@ -69,3 +71,60 @@ def put(section, key, value):
 
         with open(CONFIG_PATH, 'w') as f:
             config.write(f)
+
+# down here against standards because of mutual dependency
+from .lang import _, get_langs, set_lang
+
+def value_to_key(dict, value):
+    for key in dict:
+        if dict[key] == value:
+            return key
+
+class OptionsDialog(QDialog):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+
+        self._langs = get_langs()
+        self._lang_selection = QComboBox()
+
+        i = 0
+        lang_index = None
+        for lang in self._langs:
+            self._lang_selection.addItem(lang)
+            if self._langs[lang] == get('Global', 'lang'):
+                lang_index = i
+
+            i += 1
+
+        try:
+            self._lang_selection.setCurrentIndex(lang_index)
+        except TypeError:
+            pass
+
+        langBox = QHBoxLayout()
+        langBox.addWidget(QLabel(_('OptionsDialog.lang')))
+        langBox.addStretch(1)
+        langBox.addWidget(self._lang_selection)
+
+        cancelButton = QPushButton(_('cancel'))
+        cancelButton.clicked.connect(self.reject)
+
+        okButton = QPushButton(_('OK'))
+        okButton.clicked.connect(self.accept)
+
+        buttonBox = QHBoxLayout()
+        buttonBox.addStretch(1)
+        buttonBox.addWidget(cancelButton)
+        buttonBox.addWidget(okButton)
+
+        layout = QVBoxLayout()
+        layout.addLayout(langBox)
+        layout.addLayout(buttonBox)
+
+        self.accepted.connect(self._save)
+
+        self.setLayout(layout)
+        self.setWindowTitle(_('OptionsDialog.title'))
+
+    def _save(self):
+        put('Global', 'lang', self._langs[self._lang_selection.currentText()])

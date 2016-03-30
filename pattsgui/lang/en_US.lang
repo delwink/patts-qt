@@ -77,6 +77,9 @@ NewUser.title = Create New User
 NewUser.tryAgain = Username is blank or password and confirmation do not match. Please try again.
 NewUser.tryAgainTitle = Try Again
 
+OptionsDialog.lang = Language:
+OptionsDialog.title = Options
+
 Reports = &Reports
 Reports.endDate = To: 
 Reports.startDate = From: 
