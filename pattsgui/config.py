@@ -75,11 +75,6 @@ def put(section, key, value):
 # down here against standards because of mutual dependency
 from .lang import _, get_langs, set_lang
 
-def value_to_key(dict, value):
-    for key in dict:
-        if dict[key] == value:
-            return key
-
 class OptionsDialog(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
