@@ -122,4 +122,4 @@ class OptionsDialog(QDialog):
         self.setWindowTitle(_('OptionsDialog.title'))
 
     def _save(self):
-        put('Global', 'lang', self._langs[self._lang_selection.currentText()])
+        set_lang(self._langs[self._lang_selection.currentText()])
