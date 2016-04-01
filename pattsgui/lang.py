@@ -27,6 +27,9 @@ _lfile = ConfigParser()
 _lfile.read(join(_LDIR, _LANG + '.lang'))
 
 def set_lang(lang):
+    global _LANG
+    global _lfile
+
     put('Global', 'lang', lang)
     _LANG = lang
     _lfile = ConfigParser()
