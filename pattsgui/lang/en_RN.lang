@@ -81,8 +81,8 @@ OptionsDialog.lang = langage
 OptionsDialog.title = settins
 
 Reports = ha&rvest
-Reports.endDate = from
-Reports.startDate = to
+Reports.endDate = to
+Reports.startDate = from
 Reports.summaryFor = what {} been upto
 Reports.summaryResults = been upto
 Reports.taskSummary = time doin somethin
