@@ -1,0 +1,122 @@
+##
+##  patts-qt - Qt GUI client for PATTS
+##  Copyright (C) 2016 Delwink, LLC
+##
+##  This program is free software: you can redistribute it and/or modify
+##  it under the terms of the GNU Affero General Public License as published by
+##  the Free Software Foundation, version 3 only.
+##
+##  This program is distributed in the hope that it will be useful,
+##  but WITHOUT ANY WARRANTY; without even the implied warranty of
+##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##  GNU Affero General Public License for more details.
+##
+##  You should have received a copy of the GNU Affero General Public License
+##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+##
+
+[en_RN]
+lang = English (Redneck)
+
+cancel = whoa
+close = close up
+no = naw
+OK = awright
+yes = i reckon
+
+About.copyright = Copyright © 2015-2016 Delwink, LLC
+About.license = This program is free software: you can redistribute it and/or modify\nit under the terms of the GNU Affero General Public License as published by\nthe Free Software Foundation, version 3 only.\n\nThis program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the\nGNU Affero General Public License for more details.\n\nYou should have received a copy of the GNU Affero General Public License\nalong with this program. If not, see <http://gnu.org/licenses/>.
+About.title = bout this ere patts-qt
+
+Admin = &boss
+Admin.editTaskType = things ta do
+Admin.editUser = cowboys
+Admin.TaskTypes = things ta do
+Admin.Users = cowboys
+
+ChangePassword.confirm = one mo time:
+ChangePassword.current = whutcha seekit?
+ChangePassword.new = whutcha wawnit ta be?
+ChangePassword.title = change seekit word
+ChangePassword.tryAgain = wrong seekit er didnt hear yall right
+ChangePassword.tryAgainTitle = aint right
+
+DeleteConfirmation.text = really toss it?
+DeleteConfirmation.title = ya sure?
+
+Exception.label = all hosed up:
+
+Help = &help
+Help.About = bout
+
+Login.accessDenied = cant get in
+Login.badDatabase = got the wrong pasture
+Login.badHost = got the wrong address
+Login.badPass = got the wrong seekit
+Login.badUser = yall aint foolin no one widdat name
+
+LoginWindow.autoLogin = ya hear?
+LoginWindow.database = pasture
+LoginWindow.databaseToolTip = pasture where we workin
+LoginWindow.logIn = thats it
+LoginWindow.password = seekit
+LoginWindow.passwordToolTip = seekit word
+LoginWindow.server = address
+LoginWindow.serverToolTip = where we goin
+LoginWindow.title = patts pasture selection
+LoginWindow.user = short name
+LoginWindow.userToolTip = name thats easier n yer real one
+
+MainWindow.refresh = double check
+MainWindow.title = patts-qt - address: {}, pasture: {}, name: {}
+
+NewUser.name = short name
+NewUser.passwd = seekit word
+NewUser.confirm = seekit word again
+NewUser.title = hire new cowboy
+NewUser.tryAgain = no name er the seekits er diffrent
+NewUser.tryAgainTitle = try again
+
+OptionsDialog.lang = langage
+OptionsDialog.title = settins
+
+Reports = ha&rvest
+Reports.endDate = from
+Reports.startDate = to
+Reports.summaryFor = what {} been upto
+Reports.summaryResults = been upto
+Reports.taskSummary = time doin somethin
+Reports.timeSpentFormat = {}h {}m
+Reports.userSummary = time someone been workin
+Reports.run = yeehaw
+
+Session = &trip
+Session.LogOut = pass the reigns
+Session.Quit = nuff fer now
+
+Setup.want = cant find that pasture. plow a newun here?
+
+TaskTable.clockIn = start up
+TaskTable.clockOut = done widdat
+TaskTable.startTime = since
+TaskTable.typeID = doin
+
+TaskType.add = more spsificly
+TaskType.delete = not doin that again
+TaskType.newTaskName = new task
+
+User.state = still round
+User.isAdmin = bossy
+User.firstName = first name
+User.middleName = second name
+User.lastName = last name
+
+VersionCheck.ahead = pastures about {} {} unused.\nmight not sit right.
+VersionCheck.behind = need a new tractor for thisun.\nits about {} {} behind.
+VersionCheck.continue = go on anyway
+VersionCheck.equal = pastures ready for plowin
+VersionCheck.maintenance = stormin out. better check up later or call up Delwink for help.
+VersionCheck.quit = wait up
+VersionCheck.title = checked up on the fields for yall
+VersionCheck.version = harvest
+VersionCheck.versions = harvests
