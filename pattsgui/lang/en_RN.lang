@@ -34,12 +34,12 @@ Admin.editUser = cowboys
 Admin.TaskTypes = things ta do
 Admin.Users = cowboys
 
-ChangePassword.confirm = one mo time:
-ChangePassword.current = whutcha seekit?
-ChangePassword.new = whutcha wawnit ta be?
-ChangePassword.title = change seekit word
-ChangePassword.tryAgain = wrong seekit er didnt hear yall right
-ChangePassword.tryAgainTitle = aint right
+ChangePasswd.confirm = one mo time:
+ChangePasswd.current = whutcha seekit?
+ChangePasswd.new = whutcha wawnit ta be?
+ChangePasswd.title = change seekit word
+ChangePasswd.tryAgain = wrong seekit er didnt hear yall right
+ChangePasswd.tryAgainTitle = aint right
 
 DeleteConfirmation.text = really toss it?
 DeleteConfirmation.title = ya sure?
