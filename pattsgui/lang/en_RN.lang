@@ -34,7 +34,7 @@ Admin.editUser = cowboys
 Admin.TaskTypes = things ta do
 Admin.Users = cowboys
 
-ChangePasswd.confirm = one mo time:
+ChangePasswd.confirm = ageein:
 ChangePasswd.current = whutcha seekit?
 ChangePasswd.new = whutcha wawnit ta be?
 ChangePasswd.title = change seekit word
