@@ -1,0 +1,123 @@
+##
+##  patts-qt - Qt GUI client for PATTS
+##  Copyright (C) 2016 Caleb Herbert <csh@bluehome.net>
+##  Copyright (C) 2016 Delwink, LLC
+##
+##  This program is free software: you can redistribute it and/or modify
+##  it under the terms of the GNU Affero General Public License as published by
+##  the Free Software Foundation, version 3 only.
+##
+##  This program is distributed in the hope that it will be useful,
+##  but WITHOUT ANY WARRANTY; without even the implied warranty of
+##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##  GNU Affero General Public License for more details.
+##
+##  You should have received a copy of the GNU Affero General Public License
+##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+##
+
+[eo]
+lang = Esperanto (Internacia)
+
+cancel = Rezigni
+close = Fermigi
+no = ne
+OK = Bone
+yes = jes
+
+About.copyright = Kopirajto © {} Delwink, LLC
+About.license = Ĉi tiu verko estas libera programo: vi povas ĝin pludistribui kaj/aŭ modifi\nje la kondiĉoj de la GNUa Affera Ĝenerala Publika Permisilo, eldonita de\nla «Free Software  Foundation», versio 3 sole.\n\nNi distribuas ĉi tiun programon esperante ke ĝi estos utila,\ntamen SEN IA AJN GARANTIO; i.a. sen la implica garantio pri\nSURMERKATIGEBLO aŭ TAŬGECO POR IU KONKRETA CELO. Pliajn detalojn vidu en la\nGNUa Affera Ĝenerala Publika Permesilo.\n\nEkzemplero de la GNUa Affera Ĝenerala Publika Permesilo\ndevas esti liverita al vi kun ĉi tiu programo. Se vi ĝin ne\nricevis, turnu vin al <http://gnu.org/licenses/>.
+About.title = Pri patts-qt
+
+Admin = &Administranto
+Admin.editTaskType = Redakti Tipojn de Taskoj
+Admin.editUser = Redakti Kontojn de Uzanto
+Admin.TaskTypes = Taskaj Tipoj
+Admin.Users = Uzantoj
+
+ChangePasswd.confirm = Nova Pasfrazo Plu:
+ChangePasswd.current = Aktuala Pasfrazo:
+ChangePasswd.new = Nova Pasfrazo:
+ChangePasswd.title = Change Pasfrazo
+ChangePasswd.tryAgain = Malnova pasfrazo nevalida aŭ novaj pasfrazoj ne samis. Bonvolu reatempti.
+ChangePasswd.tryAgainTitle = Reatempti
+
+DeleteConfirmation.text = Ĉu vere forigi?
+DeleteConfirmation.title = Ĉu vi certas?
+
+Exception.label = Eraro okazis:
+
+Help = &Helpo
+Help.About = Pri
+
+Login.accessDenied = Atingon malkonsentis
+Login.badDatabase = Nevalida nomo de datumbazo
+Login.badHost = Nevalida adreso de servilo
+Login.badPass = Nevalida pasfrazo
+Login.badUser = Nevalida nomo de uzanto
+
+LoginWindow.autoLogin = Memoru Min
+LoginWindow.database = Nomo de Datumbazo
+LoginWindow.databaseToolTip = Nomo de la specifa datumbazo je la servilo
+LoginWindow.logIn = Ensaluti
+LoginWindow.password = Pasfrazo
+LoginWindow.passwordToolTip = Pasfrazo por aŭtentigi
+LoginWindow.server = Servilo
+LoginWindow.serverToolTip = IP-adreso, gastnomo, aŭ domajnnomo de la servilo
+LoginWindow.title = PATTS Datumbaza Ensaluto
+LoginWindow.user = Nomo de Uzanto
+LoginWindow.userToolTip = Uzanto por ensaluti je datumbazo
+
+MainWindow.refresh = Aktualigi
+MainWindow.title = patts-qt - Servilo: {}, DB: {}, Uzanto: {}
+
+NewUser.name = Nomo de uzanto: 
+NewUser.passwd = Pasfrazo: 
+NewUser.confirm = Konfirmu Pasfrazon:
+NewUser.title = Kreu Novan Uzanton
+NewUser.tryAgain = Nomo de uzanto estas malplena aŭ pasfrazo kaj konfirmo ne samas. Bonvolu reatempti.
+NewUser.tryAgainTitle = Reatempti
+
+OptionsDialog.lang = Lingvo:
+OptionsDialog.title = Opcioj
+
+Reports = &Reports
+Reports.endDate = Al: 
+Reports.startDate = De: 
+Reports.summaryFor = Tempa resumo por {}
+Reports.summaryResults = Rezultoj de Tempa Resumo
+Reports.taskSummary = Resumo de Taska Tempo
+Reports.timeSpentFormat = {}h {}m
+Reports.userSummary = Resumo de Uzanta Tempo
+Reports.run = Lanĉu
+
+Session = &Seanco
+Session.LogOut = Elsaluti
+Session.Quit = Ĉesi
+
+Setup.want = La datumbazon ne trovis. Ĉu krei novan PATTS-datumbazon?
+
+TaskTable.clockIn = Alhorloĝigi
+TaskTable.clockOut = Elhorloĝigi
+TaskTable.startTime = Startiga
+TaskTable.typeID = Tasko
+
+TaskType.add = Aldoni subtipon
+TaskType.delete = Forigi elektitan
+TaskType.newTaskName = Nova Tasko
+
+User.state = Aktiva
+User.isAdmin = Administrantaj Rajtoj
+User.firstName = Persona Nomo
+User.middleName = Meza Nomo
+User.lastName = Familia Nomo
+
+VersionCheck.ahead = Via datumbazo estas {} {} posttempa.\nVi eble rekontus kelkajn erarojn neatenditajn se vi daŭras.
+VersionCheck.behind = Via datumbazo estas {} {} ahead of your aktuala programaro.\nVi eble rekontus kelkajn erarojn neatenditajn se vi daŭras.
+VersionCheck.continue = Kontinuu
+VersionCheck.equal = Via datumbazo estas ĝisdata.
+VersionCheck.maintenance = Via datumbazo aperas esti je versia pasaĵo.\nBonvolu konfirmi kun via administranto aŭ kontakti Delvink-subtenon.
+VersionCheck.quit = Ĉesi
+VersionCheck.title = Rimarko de Datumbaza Versio
+VersionCheck.version = versio
+VersionCheck.versions = versioj
