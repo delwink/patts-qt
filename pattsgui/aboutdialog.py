@@ -48,9 +48,9 @@ class AboutDialog(QDialog):
         layout.addWidget(QLabel('(' + ', '.join(versions) + ')'))
 
         copyright_text = _('About.copyright').format(__copyright_year__)
-        layout.addWidget(QLabel(copyright_text.replace('\\n', '\n')))
+        layout.addWidget(QLabel(copyright_text))
 
-        layout.addWidget(QLabel(_('About.license').replace('\\n', '\n')))
+        layout.addWidget(QLabel(_('About.license')))
 
         layout.addWidget(okButton)
 

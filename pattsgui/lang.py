@@ -45,8 +45,12 @@ def get_langs():
 
     return lang_map
 
+def _format_lang(s):
+    s = s.replace('\\n', '\n')
+    return s
+
 def _(s):
     try:
-        return _lfile[_LANG][s]
+        return _format_lang(_lfile[_LANG][s])
     except KeyError:
         return s

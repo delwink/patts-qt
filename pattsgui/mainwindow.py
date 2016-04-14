@@ -54,7 +54,7 @@ class VersionCheckDialog(QDialog):
         else:
             text = _('VersionCheck.equal')
 
-        layout.addWidget(QLabel(text.replace('\\n', '\n')))
+        layout.addWidget(QLabel(text))
 
         quitButton = QPushButton(_('VersionCheck.quit'))
         quitButton.clicked.connect(self.reject)
