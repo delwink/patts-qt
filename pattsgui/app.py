@@ -25,13 +25,6 @@ from .login import get_login
 from .mainwindow import MainWindow
 from .exception import ExceptionDialog, format_exc
 
-def value_to_index(dict, value):
-    i = 0
-    for key in dict:
-        if dict[key] == value:
-            return i
-        i += 1
-
 class LanguageDialog(QDialog):
     def __init__(self):
         super().__init__()
@@ -44,9 +37,13 @@ class LanguageDialog(QDialog):
         buttonBox = QHBoxLayout()
 
         self._langs = get_langs()
-        self._selection.addItems([lang for lang in self._langs])
+
+        langs = list(self._langs.keys())
+        langs.sort()
+        self._selection.addItems([lang for lang in langs])
+
         self._selection.currentIndexChanged.connect(self._set_lang)
-        self._lang = value_to_index(self._langs, 'en_US')
+        self._lang = langs.index('English (United States)')
         self._selection.setCurrentIndex(self._lang)
         okButton.clicked.connect(self.accept)
 
