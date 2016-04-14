@@ -82,9 +82,12 @@ class OptionsDialog(QDialog):
         self._langs = get_langs()
         self._lang_selection = QComboBox()
 
+        langs = list(self._langs.keys())
+        langs.sort()
+
         i = 0
         lang_index = None
-        for lang in self._langs:
+        for lang in langs:
             self._lang_selection.addItem(lang)
             if self._langs[lang] == get('Global', 'lang'):
                 lang_index = i
