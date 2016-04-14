@@ -1,6 +1,6 @@
 ##
 ##  patts-qt - Qt GUI client for PATTS
-##  Copyright (C) 2015 Delwink, LLC
+##  Copyright (C) 2015-2016 Delwink, LLC
 ##
 ##  This program is free software: you can redistribute it and/or modify
 ##  it under the terms of the GNU Affero General Public License as published by
@@ -19,6 +19,7 @@ from patts import get_c_library_version, get_db_version
 from PyQt4.QtGui import QDialog, QLabel, QPushButton, QVBoxLayout, QWidget
 from .lang import _
 
+__copyright_year__ = '2015-2016'
 __version__ = '0.0.0'
 
 class AboutDialog(QDialog):
@@ -45,7 +46,10 @@ class AboutDialog(QDialog):
 
         layout.addWidget(title)
         layout.addWidget(QLabel('(' + ', '.join(versions) + ')'))
-        layout.addWidget(QLabel(_('About.copyright').replace('\\n', '\n')))
+
+        copyright_text = _('About.copyright').format(__copyright_year__)
+        layout.addWidget(QLabel(copyright_text.replace('\\n', '\n')))
+
         layout.addWidget(QLabel(_('About.license').replace('\\n', '\n')))
 
         layout.addWidget(okButton)
