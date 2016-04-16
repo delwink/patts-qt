@@ -19,14 +19,14 @@ On Debian, PyQt4 can be installed with
 
     # apt-get install python3-pyqt4
 
-The `patts` module can be downloaded from [Delwink's website][2]. The
+The `patts` module can be downloaded from [Delwink's website][1]. The
 instructions and dependencies of it is described in its documentation.
 
 Hacking
 -------
 
 We strive to keep the code compliant with PEP 8, but there are exceptions to
-every rule. Pull requests can be submitted via GitHub or [e-mail][3].
+every rule. Pull requests can be submitted via GitHub or [e-mail][2].
 
 License
 -------
@@ -35,5 +35,4 @@ patts-qt is libre software: you are free to use, modify, and redistribute it
 under the terms of version 3 of the GNU Affero General public license.
 
 [1]: http://delwink.com/software/patts.html
-[2]: http://delwink.com/
-[3]: mailto:contribute@delwink.com
+[2]: mailto:contribute@delwink.com
