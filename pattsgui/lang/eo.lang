@@ -25,8 +25,8 @@ no = ne
 OK = Bone
 yes = jes
 
-About.copyright = Kopirajto © {} Delwink, LLC
-About.license = Ĉi tiu verko estas libera programo: vi povas ĝin pludistribui kaj/aŭ modifi\nje la kondiĉoj de la GNUa Affera Ĝenerala Publika Permisilo, eldonita de\nla «Free Software  Foundation», versio 3 sole.\n\nNi distribuas ĉi tiun programon esperante ke ĝi estos utila,\ntamen SEN IA AJN GARANTIO; i.a. sen la implica garantio pri\nSURMERKATIGEBLO aŭ TAŬGECO POR IU KONKRETA CELO. Pliajn detalojn vidu en la\nGNUa Affera Ĝenerala Publika Permesilo.\n\nEkzemplero de la GNUa Affera Ĝenerala Publika Permesilo\ndevas esti liverita al vi kun ĉi tiu programo. Se vi ĝin ne\nricevis, turnu vin al <http://gnu.org/licenses/>.
+About.copyright = Kopirajto ©
+About.license = Ĉi tiu verko estas libera programo: vi povas ĝin pludistribui kaj/aŭ modifi\nje la kondiĉoj de la GNUa Affera Ĝenerala Publika Permisilo, eldonita de\nla «Free Software  Foundation», versio 3 sole.\n\nNi distribuas ĉi tiun programon esperante ke ĝi estos utila,\ntamen SEN IA AJN GARANTIO; i.a. sen la implica garantio pri\nSURMERKATIGEBLO aŭ TAŬGECO POR IU KONKRETA CELO. Pliajn\ndetalojn vidu en la GNUa Affera Ĝenerala Publika Permesilo.\n\nEkzemplero de la GNUa Affera Ĝenerala Publika Permesilo\ndevas esti liverita al vi kun ĉi tiu programo. Se vi ĝin ne\nricevis, turnu vin al <http://gnu.org/licenses/>.
 About.title = Pri patts-qt
 
 Admin = &Administranto

@@ -19,8 +19,12 @@ from patts import get_c_library_version, get_db_version
 from PyQt4.QtGui import QDialog, QLabel, QPushButton, QVBoxLayout, QWidget
 from .lang import _
 
-__copyright_year__ = '2015-2016'
 __version__ = '0.0.0'
+
+_COPYRIGHT_HOLDERS = [
+    '2015-2016 Delwink, LLC',
+    '2016 Caleb Herbert <csh@bluehome.net>'
+]
 
 class AboutDialog(QDialog):
     def __init__(self, patts_version, parent=None):
@@ -47,8 +51,12 @@ class AboutDialog(QDialog):
         layout.addWidget(title)
         layout.addWidget(QLabel('(' + ', '.join(versions) + ')'))
 
-        copyright_text = _('About.copyright').format(__copyright_year__)
-        layout.addWidget(QLabel(copyright_text))
+        prefix = _('About.copyright')
+        text = ''
+        for holder in _COPYRIGHT_HOLDERS:
+            text += prefix + ' ' + holder + '\n'
+
+        layout.addWidget(QLabel(text.rstrip('\n')))
 
         layout.addWidget(QLabel(_('About.license')))
 
