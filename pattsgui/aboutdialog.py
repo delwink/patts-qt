@@ -51,8 +51,8 @@ class AboutDialog(QDialog):
         layout.addWidget(title)
         layout.addWidget(QLabel('(' + ', '.join(versions) + ')'))
 
-        text = ',\n\t'.join([holder for holder in _COPYRIGHT_HOLDERS])
-        layout.addWidget(QLabel(_('About.copyright') + ' ' + text))
+        holders = ',\n\t'.join([holder for holder in _COPYRIGHT_HOLDERS])
+        layout.addWidget(QLabel(_('About.copyright') + ' ' + holders))
 
         layout.addWidget(QLabel(_('About.license')))
 
