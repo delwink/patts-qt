@@ -281,11 +281,12 @@ class MainWindowCentralWidget(QWidget):
         self._view.setModel(CurrentTaskModel())
 
 class MainWindow(QMainWindow):
-    def __init__(self, user, passwd, host, database):
+    def __init__(self, user, passwd, host, database, app=None):
         self._srv, self._port = split_host(host)
         self._user = user
         self._pw = passwd
         self._db = database
+        self._app = app
 
         super().__init__()
 
@@ -387,6 +388,9 @@ class MainWindow(QMainWindow):
         put('Login', 'autologin', 'false')
         put('Login', 'passwd', '')
         self.close()
+
+        if self._app:
+            self._app.try_main()
 
     def _save_dims(self):
         if self.windowState() & Qt.WindowMaximized:

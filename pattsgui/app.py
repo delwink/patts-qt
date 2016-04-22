@@ -90,7 +90,6 @@ class PattsApp(QApplication):
         super().__init__(argv)
 
         self._canceled = False
-        self._mwin = None
         self._sd = SetupDialog()
         self._sd.accepted.connect(self._setup)
         self._sd.rejected.connect(self._bad_db)
@@ -104,6 +103,7 @@ class PattsApp(QApplication):
             set_lang(ld.lang)
             put('Global', 'firstrun', 'false')
 
+    def _reset_login(self):
         try:
             if get('Login', 'autologin').lower() == 'true':
                 self._user = get('Login', 'user')
@@ -115,10 +115,14 @@ class PattsApp(QApplication):
         except KeyError:
             self._login()
 
+    def try_main(self):
+        self._mwin = None
+
+        self._reset_login()
         while self._mwin is None:
             try:
                 self._mwin = MainWindow(self._user, self._passwd, self._host,
-                                        self._db)
+                                        self._db, app=self)
             except Exception as e:
                 if type(e) is Exception:
                     errno = int(str(e))
@@ -142,6 +146,8 @@ class PattsApp(QApplication):
                     ExceptionDialog(format_exc()).exec_()
                     raise
 
+        self._mwin.show()
+
     def _login(self, message=''):
         self._user, self._passwd, self._host, self._db = get_login(message)
 
@@ -156,29 +162,8 @@ class PattsApp(QApplication):
             self._canceled = True
 
     def exec_(self):
-        if self._user and self._passwd and self._host and self._db:
-            self._mwin.show()
-            return super().exec_()
-        else:
-            if self._canceled:
-                exit(0)
-            elif not self._user:
-                self._login('Login.badUser')
-            elif not self._passwd:
-                self._login('Login.badPass')
-            elif not self._host:
-                self._login('Login.badHost')
-            elif not self._db:
-                self._login('Login.badDatabase')
-            else:
-                try:
-                    raise LookupError('Application initialization did not get '
-                                      'credentials!')
-                except:
-                    ExceptionDialog(format_exc()).exec_()
-                    raise
-
-            return self.exec_()
+        self.try_main()
+        return super().exec_()
 
     def _setup(self):
         try:
