@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 ##
 ##  patts-qt - Qt GUI client for PATTS
-##  Copyright (C) 2015 Delwink, LLC
+##  Copyright (C) 2015-2016 Delwink, LLC
 ##
 ##  This program is free software: you can redistribute it and/or modify
 ##  it under the terms of the GNU Affero General Public License as published by
@@ -16,12 +16,34 @@
 ##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
 
+from argparse import Action, ArgumentParser
 from sys import argv
 from pattsgui import PattsApp
+from pattsgui.aboutdialog import __version__, _COPYRIGHT_HOLDERS
 
 __title__ = 'patts-qt'
 __author__ = 'David McMackins II'
 __license__ = 'AGPLv3'
+__version_info__ = '''{} {}
+Copyright (C) {}
+License AGPLv3: GNU AGPL version 3 only <http://gnu.org/licenses/agpl.html>.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Written by {}'''.format(__title__, __version__,
+                        '\n\t      '.join(_COPYRIGHT_HOLDERS), __author__)
+
+class VersionAction(Action):
+    def __call__(self, parser, values, namespace, option_string):
+        print(__version_info__)
+        exit(0)
+
+cli = ArgumentParser(__title__)
+
+cli.add_argument('-v', '--version', action=VersionAction,
+                 help='show version information and exit', nargs=0)
+
+args = cli.parse_args()
 
 app = PattsApp(argv)
 exit(app.exec_())
