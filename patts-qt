@@ -31,7 +31,7 @@ This is free software: you are free to change and redistribute it.
 There is NO WARRANTY, to the extent permitted by law.
 
 Written by {}'''.format(__title__, __version__,
-                        '\n\t      '.join(_COPYRIGHT_HOLDERS), __author__)
+                        ',\n\t      '.join(_COPYRIGHT_HOLDERS), __author__)
 
 class VersionAction(Action):
     def __call__(self, parser, values, namespace, option_string):
